@@ -102,7 +102,7 @@ export function combineDidDocumentWithJson(didDoc: DidDocument, json: Record<str
 
 /**
  * Processes the difference between a base DidDocument and a complete DidDocument
- *
+ * 
  * Note: it does deep comparison based only on "id" field to determine whether is
  * the same object or is a different one
  *

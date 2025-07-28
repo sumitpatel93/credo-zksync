@@ -1,0 +1,37 @@
+{
+  "name": "@credo-ts/zksync",
+  "main": "src/index",
+  "types": "src/index",
+  "version": "0.1.0",
+  "files": [
+    "build"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "main": "build/index",
+    "types": "build/index",
+    "access": "public"
+  },
+  "homepage": "https://github.com/openwallet-foundation/credo-ts/tree/main/packages/zksync",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openwallet-foundation/credo-ts",
+    "directory": "packages/zksync"
+  },
+  "scripts": {
+    "build": "pnpm run clean && pnpm run compile",
+    "clean": "rimraf ./build",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@credo-ts/core": "workspace:*",
+    "ethers": "^6.7.1",
+    "zksync-ethers": "^6.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,3 +1,5 @@
+import { ZkSyncDidRegistrar } from '@credo-ts/zksync'
+
 import type { DidRegistrar, DidResolver } from './domain'
 
 import {
@@ -54,7 +56,7 @@ export class DidsModuleConfig {
     // This prevents creating new instances every time this property is accessed
     if (this._registrars) return this._registrars
 
-    let registrars = this.options.registrars ?? [new KeyDidRegistrar(), new PeerDidRegistrar(), new JwkDidRegistrar()]
+    let registrars = this.options.registrars ?? [new KeyDidRegistrar(), new PeerDidRegistrar(), new JwkDidRegistrar(), new ZkSyncDidRegistrar()]
 
     // Add peer did registrar if it is not included yet
     if (!registrars.find((registrar) => registrar instanceof PeerDidRegistrar)) {
