@@ -49,8 +49,8 @@ catalogs:
       specifier: 0.5.1
       version: 0.5.1
     class-validator:
-      specifier: 0.14.1
-      version: 0.14.1
+      specifier: 0.14.2
+      version: 0.14.2
     express:
       specifier: ^4.21.2
       version: 4.21.2
@@ -294,7 +294,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -328,7 +328,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       reflect-metadata:
         specifier: 'catalog:'
         version: 0.2.2
@@ -362,7 +362,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -426,7 +426,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -529,7 +529,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       dcql:
         specifier: ^0.3.0
         version: 0.3.0(typescript@5.8.3)
@@ -605,7 +605,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       luxon:
         specifier: ^3.5.0
         version: 3.6.1
@@ -648,7 +648,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
     devDependencies:
       '@credo-ts/node':
         specifier: workspace:*
@@ -827,7 +827,7 @@ importers:
         version: 0.5.1
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -955,7 +955,7 @@ importers:
         version: 0.3.2
       class-validator:
         specifier: 'catalog:'
-        version: 0.14.1
+        version: 0.14.2
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -3381,8 +3381,8 @@ packages:
   class-transformer@0.5.1:
     resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
 
-  class-validator@0.14.1:
-    resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
+  class-validator@0.14.2:
+    resolution: {integrity: sha512-3kMVRF2io8N8pY1IFIXlho9r8IPUUIfHe2hYVtiebvAzU2XeQFXTv+XI4WX+TnXmtwXMDcjngcpkiPM0O9PvLw==}
 
   clear@0.1.0:
     resolution: {integrity: sha512-qMjRnoL+JDPJHeLePZJuao6+8orzHMGP04A8CdwCNsKhRbOnKRjefxONR7bwILT3MHecxKBjHkKL/tkZ8r4Uzw==}
@@ -6035,6 +6035,7 @@ packages:
   superagent@10.2.1:
     resolution: {integrity: sha512-O+PCv11lgTNJUzy49teNAWLjBZfc+A1enOwTpLlH6/rsvKcTwcdTT8m9azGkVqM7HBl5jpyZ7KTPhHweokBcdg==}
     engines: {node: '>=14.18.0'}
+    deprecated: Please upgrade to superagent v10.2.2+, see release notes at https://github.com/forwardemail/superagent/releases/tag/v10.2.2 - maintenance is supported by Forward Email @ https://forwardemail.net
 
   supertest@7.1.1:
     resolution: {integrity: sha512-aI59HBTlG9e2wTjxGJV+DygfNLgnWbGdZxiA/sgrnNNikIW8lbDvCtF6RnhZoJ82nU7qv7ZLjrvWqCEm52fAmw==}
@@ -9937,7 +9938,7 @@ snapshots:
 
   class-transformer@0.5.1: {}
 
-  class-validator@0.14.1:
+  class-validator@0.14.2:
     dependencies:
       '@types/validator': 13.15.1
       libphonenumber-js: 1.12.9
