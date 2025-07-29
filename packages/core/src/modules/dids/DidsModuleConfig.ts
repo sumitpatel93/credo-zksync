@@ -1,4 +1,4 @@
-import { ZkSyncDidRegistrar } from '@credo-ts/zksync'
+import { ZkSyncDidRegistrar, ZkSyncDidResolver } from '@credo-ts/zksync'
 
 import type { DidRegistrar, DidResolver } from './domain'
 
@@ -88,6 +88,7 @@ export class DidsModuleConfig {
       new KeyDidResolver(),
       new PeerDidResolver(),
       new JwkDidResolver(),
+      new ZkSyncDidResolver(),
     ]
 
     // Add peer did resolver if it is not included yet
