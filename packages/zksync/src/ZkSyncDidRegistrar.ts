@@ -118,7 +118,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
     }
   }
 
-  """  public async deactivate(agentContext: AgentContext, options: DidDeactivateOptions): Promise<DidDeactivateResult> {
+  public async deactivate(agentContext: AgentContext, options: DidDeactivateOptions): Promise<DidDeactivateResult> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
 
@@ -222,6 +222,4 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       throw new Error(`Failed to revoke delegate: ${error.message}`)
     }
   }
-}
-""
 }

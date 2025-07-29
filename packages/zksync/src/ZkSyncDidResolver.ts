@@ -54,7 +54,7 @@ export class ZkSyncDidResolver implements DidResolver {
             publicKeyHex: TypedArrayEncoder.toString(publicKeyHex),
           },
         ],
-        """        authentication: [`${did}#key-1`],
+        authentication: [`${did}#key-1`],
       })
 
       return {
@@ -93,4 +93,3 @@ export class ZkSyncDidResolver implements DidResolver {
     }
   }
 }
-"""

@@ -1,4 +1,4 @@
-"""import { Agent, DidDocumentRole, DidRepository } from '@credo-ts/core'
+import { Agent, DidDocumentRole, DidRepository } from '@credo-ts/core'
 import { Wallet } from 'zksync-ethers'
 
 import { ZkSyncDidRegistrar, ZkSyncDidResolver } from '../'
@@ -20,9 +20,16 @@ describe('ZkSyncDidDelegation', () => {
 
   it('should add and resolve a delegate', async () => {
     const agent = new Agent({
+      config: {
+        label: 'test-agent',
+      },
       modules: {
         didResolver: resolver,
         didRegistrar: registrar,
+      },
+      agentDependencies: {
+        // Mock FileSystem as it's required by the Agent constructor
+        FileSystem: class MockFileSystem {},
       },
     })
 
@@ -46,9 +53,16 @@ describe('ZkSyncDidDelegation', () => {
 
   it('should revoke a delegate', async () => {
     const agent = new Agent({
+      config: {
+        label: 'test-agent',
+      },
       modules: {
         didResolver: resolver,
         didRegistrar: registrar,
+      },
+      agentDependencies: {
+        // Mock FileSystem as it's required by the Agent constructor
+        FileSystem: class MockFileSystem {},
       },
     })
 
@@ -69,5 +83,3 @@ describe('ZkSyncDidDelegation', () => {
     expect(resolvedDelegate).toBeNull()
   })
 })
-
-""
