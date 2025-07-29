@@ -118,7 +118,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
     }
   }
 
-  public async deactivate(agentContext: AgentContext, options: DidDeactivateOptions): Promise<DidDeactivateResult> {
+  """  public async deactivate(agentContext: AgentContext, options: DidDeactivateOptions): Promise<DidDeactivateResult> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
 
@@ -152,4 +152,76 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       }
     }
   }
+
+  public async addDelegate(
+    agentContext: AgentContext,
+    options: {
+      did: string
+      delegate: {
+        type: string
+        address: string
+        validTo: number
+      }
+      secret?: {
+        privateKey?: Buffer
+      }
+    }
+  ): Promise<void> {
+    try {
+      const provider = new Provider('https://sepolia.era.zksync.dev')
+
+      if (!options.secret?.privateKey) {
+        throw new Error('A privateKey is required to add a delegate to a did:zksync DID.')
+      }
+      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+
+      const tx = await contract.addDelegate(
+        options.did.split(':')[2],
+        TypedArrayEncoder.fromString(options.delegate.type),
+        options.delegate.address,
+        options.delegate.validTo
+      )
+      await tx.wait()
+    } catch (error) {
+      throw new Error(`Failed to add delegate: ${error.message}`)
+    }
+  }
+
+  public async revokeDelegate(
+    agentContext: AgentContext,
+    options: {
+      did: string
+      delegate: {
+        type: string
+        address: string
+      }
+      secret?: {
+        privateKey?: Buffer
+      }
+    }
+  ): Promise<void> {
+    try {
+      const provider = new Provider('https://sepolia.era.zksync.dev')
+
+      if (!options.secret?.privateKey) {
+        throw new Error('A privateKey is required to revoke a delegate from a did:zksync DID.')
+      }
+      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+
+      const tx = await contract.revokeDelegate(
+        options.did.split(':')[2],
+        TypedArrayEncoder.fromString(options.delegate.type),
+        options.delegate.address
+      )
+      await tx.wait()
+    } catch (error) {
+      throw new Error(`Failed to revoke delegate: ${error.message}`)
+    }
+  }
+}
+""
 }

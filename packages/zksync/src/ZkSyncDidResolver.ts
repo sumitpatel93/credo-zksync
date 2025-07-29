@@ -54,7 +54,7 @@ export class ZkSyncDidResolver implements DidResolver {
             publicKeyHex: TypedArrayEncoder.toString(publicKeyHex),
           },
         ],
-        authentication: [`${did}#key-1`],
+        """        authentication: [`${did}#key-1`],
       })
 
       return {
@@ -77,4 +77,20 @@ export class ZkSyncDidResolver implements DidResolver {
       }
     }
   }
+
+  public async resolveDelegate(agentContext: AgentContext, did: string, type: string): Promise<string | null> {
+    try {
+      const provider = new Provider('https://sepolia.era.zksync.dev')
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
+
+      const identity = did.split(':')[2]
+
+      const delegate = await contract.delegates(identity, TypedArrayEncoder.fromString(type))
+
+      return delegate === '0x0000000000000000000000000000000000000000' ? null : delegate
+    } catch (error) {
+      return null
+    }
+  }
 }
+"""
