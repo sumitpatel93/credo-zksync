@@ -1,6 +1,6 @@
 import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
 import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
-import { DidDocument } from '@credo-ts/core'
+import { DidDocument, TypedArrayEncoder } from '@credo-ts/core'
 import { Contract, Provider } from 'zksync-ethers'
 
 import CONTRACT_ABI from '../contracts/ZkSyncDidRegistry.abi.json'
@@ -37,14 +37,24 @@ export class ZkSyncDidResolver implements DidResolver {
         }
       }
 
-      // For now, we will construct a minimal DID Document.
-      // A complete implementation would fetch verification methods and services from the contract attributes.
+      // Fetch the public key attribute from the registry
+      const publicKeyHex = await contract.attributes(
+        identity,
+        TypedArrayEncoder.fromString('did/pub/Secp256k1/veriKey/hex')
+      )
+
       const didDocument = new DidDocument({
         id: did,
         controller: `did:zksync:${owner}`,
-        // NOTE: The ZkSyncDidRegistrar needs to be updated to store the public key
-        // as an attribute on the contract (e.g., 'did/pub/Secp256k1/veriKey/hex').
-        // The resolver would then fetch this attribute to construct the verificationMethod.
+        verificationMethod: [
+          {
+            id: `${did}#key-1`,
+            type: 'EcdsaSecp256k1VerificationKey2019',
+            controller: did,
+            publicKeyHex: TypedArrayEncoder.toString(publicKeyHex),
+          },
+        ],
+        authentication: [`${did}#key-1`],
       })
 
       return {
