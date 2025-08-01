@@ -26,6 +26,8 @@ describe('ZkSyncDidDelegation', () => {
     const deployedContract = await contractFactory.deploy()
     await deployedContract.waitForDeployment()
     const contractAddress = await deployedContract.getAddress()
+    console.log(`Contract Address: ${contractAddress}`)
+    console.log(`Contract Deployment Tx Hash: ${(await deployedContract.deploymentTransaction()).hash}`)
 
     registrar = new ZkSyncDidRegistrar(contractAddress)
     resolver = new ZkSyncDidResolver(contractAddress)
@@ -50,12 +52,13 @@ describe('ZkSyncDidDelegation', () => {
     })
 
     // Create the DID on the ZkSync network
-    await registrar.create(agentContext, {
+    const createResult = await registrar.create(agentContext, {
       method: 'zksync',
       secret: {
         privateKey: wallet.privateKey,
       },
     })
+    console.log(`DID Creation Tx Hash: ${createResult.didDocumentMetadata.transaction}`)
   })
 
   it('should add and resolve a delegate', async () => {
@@ -71,7 +74,9 @@ describe('ZkSyncDidDelegation', () => {
       },
     }
 
-    await registrar.addDelegate(agentContext, delegateOptions)
+    const addDelegateResult = await registrar.addDelegate(agentContext, delegateOptions)
+    console.log(`Add Delegate Tx Hash: ${addDelegateResult.transactionHash}`)
+    console.log(`Add Delegate Tx Hash: ${addDelegateResult.transactionHash}`)
 
     const resolvedDelegate = await resolver.resolveDelegate(agentContext, did, 'veriKey')
     expect(resolvedDelegate).toBe(delegateOptions.delegate.address)
@@ -89,7 +94,8 @@ describe('ZkSyncDidDelegation', () => {
       },
     }
 
-    await registrar.revokeDelegate(agentContext, delegateOptions)
+    const revokeDelegateResult = await registrar.revokeDelegate(agentContext, delegateOptions)
+    console.log(`Revoke Delegate Tx Hash: ${revokeDelegateResult.transactionHash}`)
 
     const resolvedDelegate = await resolver.resolveDelegate(agentContext, did, 'veriKey')
     expect(resolvedDelegate).toBeNull()

@@ -178,7 +178,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         privateKey?: Buffer
       }
     }
-  ): Promise<void> {
+  ): Promise<{ transactionHash: string }> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
 
@@ -196,6 +196,8 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         options.delegate.validTo
       )
       await tx.wait()
+
+      return { transactionHash: tx.hash }
     } catch (error) {
       throw new Error(`Failed to add delegate: ${error.message}`)
     }
@@ -213,7 +215,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         privateKey?: Buffer
       }
     }
-  ): Promise<void> {
+  ): Promise<{ transactionHash: string }> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
 
@@ -230,6 +232,8 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         options.delegate.address
       )
       await tx.wait()
+
+      return { transactionHash: tx.hash }
     } catch (error) {
       throw new Error(`Failed to revoke delegate: ${error.message}`)
     }

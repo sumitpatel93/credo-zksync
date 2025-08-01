@@ -1,14 +1,26 @@
 import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
 import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
-import { DidDocument, TypedArrayEncoder } from '@credo-ts/core'
+import { DidDocument, TypedArrayEncoder, Buffer } from '@credo-ts/core'
 import { Contract, Provider } from 'zksync-ethers'
 
-import CONTRACT_ABI from '../contracts/ZkSyncDidRegistry.abi.json'
+import CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
 
-// The address of your deployed ZkSyncDidRegistry contract
-const CONTRACT_ADDRESS = '0xB175e1F72ec786d6c0c2fc9A5329ADDb95D39b2a'
+function padToBytes32(value: string): Buffer {
+  const buf = Buffer.from(value)
+  if (buf.length > 32) {
+    throw new Error('Value too long to be padded to 32 bytes')
+  }
+  const padded = Buffer.alloc(32)
+  buf.copy(padded)
+  return padded
+}
 
 export class ZkSyncDidResolver implements DidResolver {
+  private contractAddress: string;
+
+  constructor(contractAddress: string) {
+    this.contractAddress = contractAddress;
+  }
   public readonly supportedMethods = ['zksync']
 
   public async resolve(agentContext: AgentContext, did: string): Promise<DidResolutionResult> {
@@ -17,7 +29,7 @@ export class ZkSyncDidResolver implements DidResolver {
     try {
       // Connect to the zkSync Sepolia Testnet
       const provider = new Provider('https://sepolia.era.zksync.dev')
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, provider)
 
       const identity = did.split(':')[2]
 
@@ -81,11 +93,11 @@ export class ZkSyncDidResolver implements DidResolver {
   public async resolveDelegate(agentContext: AgentContext, did: string, type: string): Promise<string | null> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, provider)
 
       const identity = did.split(':')[2]
 
-      const delegate = await contract.delegates(identity, TypedArrayEncoder.fromString(type))
+      const delegate = await contract.delegates(identity, padToBytes32(type))
 
       return delegate === '0x0000000000000000000000000000000000000000' ? null : delegate
     } catch (error) {
