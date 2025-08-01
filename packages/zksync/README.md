@@ -81,6 +81,21 @@ The `@credo-ts/zksync` package consists of two main components:
 
 Both the registrar and resolver interact with a deployed `ZkSyncDidRegistry` smart contract on the zkSync network. The contract address is configured during the instantiation of these classes.
 
+The type of DID created in this package is did:zksync.
+
+
+  Specifically, the ZkSyncDidRegistrar creates DIDs in the format did:zksync:<wallet_address>,
+  where <wallet_address> is the Ethereum address derived from the private key used to register
+  the DID.
+
+
+  The DID Document for this type of DID includes:
+   * An id field with the did:zksync:<wallet_address> format.
+   * A verificationMethod entry, typically of type EcdsaSecp256k1VerificationKey2019, which uses
+     the public key derived from the wallet.
+   * An authentication entry that references the verificationMethod, indicating that the wallet's
+     key can be used to authenticate the DID.
+
 ## Testing
 
 The tests for this package (`ZkSyncDidDelegation.test.ts`) are designed to verify the end-to-end functionality of DID management on the zkSync network. The testing flow is as follows:
