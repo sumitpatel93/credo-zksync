@@ -1,13 +1,25 @@
 import type { AgentContext, DidCreateOptions, DidCreateResult, DidDeactivateResult, DidRegistrar, DidUpdateResult } from '@credo-ts/core'
-import { DidDocument, DidDocumentRole, DidRecord, DidRepository, TypedArrayEncoder } from '@credo-ts/core'
+import { DidDocument, DidDocumentRole, DidRecord, DidRepository, TypedArrayEncoder, Buffer } from '@credo-ts/core'
 import { Contract, Provider, Wallet } from 'zksync-ethers'
 
-import CONTRACT_ABI from '../contracts/ZkSyncDidRegistry.abi.json'
+import CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
 
-// The address of your deployed ZkSyncDidRegistry contract
-const CONTRACT_ADDRESS = '0xB175e1F72ec786d6c0c2fc9A5329ADDb95D39b2a'
+function padToBytes32(value: string): Buffer {
+  const buf = Buffer.from(value)
+  if (buf.length > 32) {
+    throw new Error('Value too long to be padded to 32 bytes')
+  }
+  const padded = Buffer.alloc(32)
+  buf.copy(padded)
+  return padded
+}
 
 export class ZkSyncDidRegistrar implements DidRegistrar {
+  private contractAddress: string;
+
+  constructor(contractAddress: string) {
+    this.contractAddress = contractAddress;
+  }
   public readonly supportedMethods = ['zksync']
 
   public async create(agentContext: AgentContext, options: DidCreateOptions): Promise<DidCreateResult> {
@@ -22,11 +34,11 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       if (!options.secret?.privateKey) {
         throw new Error('A privateKey is required to register a did:zksync DID.')
       }
-      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+      const wallet = new Wallet(options.secret.privateKey, provider)
 
       const did = `did:zksync:${wallet.address}`
 
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, wallet)
 
       // Set the public key as a verification method attribute on the registry
       // This follows the convention for ERC-1056
@@ -87,9 +99,9 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       if (!options.secret?.privateKey) {
         throw new Error('A privateKey is required to update a did:zksync DID.')
       }
-      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+      const wallet = new Wallet(options.secret.privateKey, provider)
 
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, wallet)
 
       // The new owner is passed in the didDocument.id
       const newOwner = options.didDocument.id.split(':')[2]
@@ -125,9 +137,9 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       if (!options.secret?.privateKey) {
         throw new Error('A privateKey is required to deactivate a did:zksync DID.')
       }
-      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+      const wallet = new Wallet(options.secret.privateKey, provider)
 
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, wallet)
 
       // Deactivation is done by changing the owner to the zero address
       const tx = await contract.changeOwner(wallet.address, '0x0000000000000000000000000000000000000000')
@@ -173,13 +185,13 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       if (!options.secret?.privateKey) {
         throw new Error('A privateKey is required to add a delegate to a did:zksync DID.')
       }
-      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+      const wallet = new Wallet(options.secret.privateKey, provider)
 
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, wallet)
 
       const tx = await contract.addDelegate(
         options.did.split(':')[2],
-        TypedArrayEncoder.fromString(options.delegate.type),
+        padToBytes32(options.delegate.type),
         options.delegate.address,
         options.delegate.validTo
       )
@@ -208,13 +220,13 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       if (!options.secret?.privateKey) {
         throw new Error('A privateKey is required to revoke a delegate from a did:zksync DID.')
       }
-      const wallet = new Wallet(TypedArrayEncoder.toBuffer(options.secret.privateKey), provider)
+      const wallet = new Wallet(options.secret.privateKey, provider)
 
-      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, wallet)
 
       const tx = await contract.revokeDelegate(
         options.did.split(':')[2],
-        TypedArrayEncoder.fromString(options.delegate.type),
+        padToBytes32(options.delegate.type),
         options.delegate.address
       )
       await tx.wait()
