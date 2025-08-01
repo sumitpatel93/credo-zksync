@@ -73,7 +73,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
 
       return {
         didDocumentMetadata: { transaction: tx.hash },
-        didRegistrationMetadata: { did: did, contract: CONTRACT_ADDRESS },
+        didRegistrationMetadata: { did: did, contract: this.contractAddress },
         didState: {
           state: 'finished',
           did,
@@ -111,7 +111,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
 
       return {
         didDocumentMetadata: { transaction: tx.hash },
-        didRegistrationMetadata: { contract: CONTRACT_ADDRESS },
+        didRegistrationMetadata: { contract: this.contractAddress },
         didState: {
           state: 'finished',
           did: options.did,
@@ -147,7 +147,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
 
       return {
         didDocumentMetadata: { transaction: tx.hash },
-        didRegistrationMetadata: { contract: CONTRACT_ADDRESS },
+        didRegistrationMetadata: { contract: this.contractAddress },
         didState: {
           state: 'finished',
           did: options.did,
