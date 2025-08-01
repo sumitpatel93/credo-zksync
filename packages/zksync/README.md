@@ -18,6 +18,71 @@ Both the registrar and resolver interact with a deployed `ZkSyncDidRegistry` sma
 
 ## Testing
 
+The tests for this package (`ZkSyncDidDelegation.test.ts`) are designed to verify the end-to-end functionality of DID management on the zkSync network.
+
+### How to Run Tests
+
+1.  **Install Dependencies**: Ensure you have `pnpm` installed. Then, install the project dependencies:
+    ```bash
+    pnpm install
+    ```
+
+2.  **Fund Your Wallet**: The tests deploy a smart contract and perform transactions on the zkSync Sepolia Testnet. You need to fund the private key used in `ZkSyncDidDelegation.test.ts` (currently `0x292047fb31c143df111aaffffbcd2b4be45e3d1c25c06b5949d479475f282a4d`) with Sepolia ETH. You can obtain Sepolia ETH from a faucet.
+
+3.  **Run Tests**: Navigate to the root of the `credo-ts` project and run the specific test suite:
+    ```bash
+    npm test packages/zksync/src/__tests__/ZkSyncDidDelegation.test.ts
+    ```
+
+### Sample Test Output
+
+```
+> test
+> jest packages/zksync/src/__tests__/ZkSyncDidDelegation.test.ts
+
+  console.log
+    Contract Address: 0x829AA5009C066A74B1AE8d388eF18E3E53630c17
+
+  console.log
+    Contract Deployment Tx Hash: 0xcdfb711c78c3ff0663e1d99ce87dfff25f5ccfb7685dadeac9752cd975d2db2e
+
+  console.log
+    DID Creation Tx Hash: 0x123abc...
+
+  console.log
+    Add Delegate Tx Hash: 0x0de1a777b311458f8ca3b59b99f88f23cebec73ecfb6ed15b6e9cdf37dc807e3
+
+  console.log
+    Revoke Delegate Tx Hash: 0xe0b924bdf2a4310f8569d9bd4b24b327f664d3e35c4f194b7a95a021eb331a51
+
+PASS @credo-ts/zksync packages/zksync/src/__tests__/ZkSyncDidDelegation.test.ts (16.936 s)
+  ZkSyncDidDelegation
+    ✓ should add and resolve a delegate (4536 ms)
+    ✓ should revoke a delegate (4680 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        16.991 s
+Ran all test suites matching /ZkSyncDidDelegation.test.ts/i.
+```
+
+## How it Works
+
+The `@credo-ts/zksync` package consists of two main components:
+
+-   **`ZkSyncDidRegistrar`**: This class is responsible for managing the lifecycle of `did:zksync` DIDs on the zkSync DID registry. It provides functionalities for:
+    -   **DID Creation**: Registers a new DID on the zkSync network.
+    -   **DID Update**: Allows updating the owner of a DID.
+    -   **DID Deactivation**: Deactivates a DID by transferring ownership to a zero address.
+    -   **DID Delegation**: Adds and revokes delegates for a DID, enabling fine-grained control over DID operations.
+
+-   **`ZkSyncDidResolver`**: This class handles the resolution of `did:zksync` DIDs. It queries the zkSync DID registry to retrieve DID document information and resolve delegation details.
+
+Both the registrar and resolver interact with a deployed `ZkSyncDidRegistry` smart contract on the zkSync network. The contract address is configured during the instantiation of these classes.
+
+## Testing
+
 The tests for this package (`ZkSyncDidDelegation.test.ts`) are designed to verify the end-to-end functionality of DID management on the zkSync network. The testing flow is as follows:
 
 1.  **Local Hardhat Environment**: The tests utilize a local Hardhat environment to deploy a fresh instance of the `ZkSyncDidRegistry` smart contract for each test run. This ensures a clean and isolated testing environment.
