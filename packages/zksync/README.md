@@ -27,7 +27,7 @@ The tests for this package (`ZkSyncDidDelegation.test.ts`) are designed to verif
     pnpm install
     ```
 
-2.  **Fund Your Wallet**: The tests deploy a smart contract and perform transactions on the zkSync Sepolia Testnet. You need to fund the private key used in `ZkSyncDidDelegation.test.ts` (currently `0x292047fb31c143df111aaffffbcd2b4be45e3d1c25c06b5949d479475f282a4d`) with Sepolia ETH. You can obtain Sepolia ETH from a faucet.
+2.  **Fund Your Wallet**: The tests deploy a smart contract and perform transactions on the zkSync Sepolia Testnet. You need to fund the private key used in `ZkSyncDidDelegation.test.ts` (currently `0x292047fb31c143df111aa...`) with Sepolia ETH. You can obtain Sepolia ETH from a faucet.
 
 3.  **Run Tests**: Navigate to the root of the `credo-ts` project and run the specific test suite:
     ```bash

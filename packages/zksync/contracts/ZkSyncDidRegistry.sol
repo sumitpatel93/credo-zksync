@@ -20,6 +20,12 @@ contract ZkSyncDidRegistry {
     // Mapping from identity address to the block number of the last change
     mapping(address => uint) public changed;
 
+    // AnonCreds Objects
+    mapping(bytes32 => string) public schemas;
+    mapping(bytes32 => string) public credentialDefinitions;
+    mapping(bytes32 => string) public revocationRegistryDefinitions;
+    mapping(bytes32 => string) public revocationStatusLists;
+
     // --- Events ---
 
     event DIDOwnerChanged(
@@ -43,6 +49,12 @@ contract ZkSyncDidRegistry {
         uint validTo,
         uint previousChange
     );
+
+    event SchemaRegistered(bytes32 indexed schemaId, string schema);
+    event CredentialDefinitionRegistered(bytes32 indexed credentialDefinitionId, string credentialDefinition);
+    event RevocationRegistryDefinitionRegistered(bytes32 indexed revocationRegistryDefinitionId, string revocationRegistryDefinition);
+    event RevocationStatusListRegistered(bytes32 indexed revocationRegistryDefinitionId, uint timestamp, string revocationStatusList);
+
 
     // --- Modifier ---
 
@@ -92,5 +104,26 @@ contract ZkSyncDidRegistry {
         attributes[identity][name] = new bytes(0);
         emit DIDAttributeChanged(identity, name, value, 0, changed[identity]);
         changed[identity] = block.number;
+    }
+
+    function registerSchema(bytes32 schemaId, string calldata schema) public {
+        schemas[schemaId] = schema;
+        emit SchemaRegistered(schemaId, schema);
+    }
+
+    function registerCredentialDefinition(bytes32 credentialDefinitionId, string calldata credentialDefinition) public {
+        credentialDefinitions[credentialDefinitionId] = credentialDefinition;
+        emit CredentialDefinitionRegistered(credentialDefinitionId, credentialDefinition);
+    }
+
+    function registerRevocationRegistryDefinition(bytes32 revocationRegistryDefinitionId, string calldata revocationRegistryDefinition) public {
+        revocationRegistryDefinitions[revocationRegistryDefinitionId] = revocationRegistryDefinition;
+        emit RevocationRegistryDefinitionRegistered(revocationRegistryDefinitionId, revocationRegistryDefinition);
+    }
+
+    function registerRevocationStatusList(bytes32 revocationRegistryDefinitionId, uint timestamp, string calldata revocationStatusList) public {
+        bytes32 statusListId = keccak256(abi.encodePacked(revocationRegistryDefinitionId, timestamp));
+        revocationStatusLists[statusListId] = revocationStatusList;
+        emit RevocationStatusListRegistered(revocationRegistryDefinitionId, timestamp, revocationStatusList);
     }
 }

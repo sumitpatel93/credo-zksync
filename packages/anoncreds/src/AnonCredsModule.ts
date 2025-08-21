@@ -17,7 +17,8 @@ import {
 import { AnonCredsCredentialDefinitionRepository } from './repository/AnonCredsCredentialDefinitionRepository'
 import { AnonCredsSchemaRepository } from './repository/AnonCredsSchemaRepository'
 import { AnonCredsHolderServiceSymbol, AnonCredsIssuerServiceSymbol, AnonCredsVerifierServiceSymbol } from './services'
-import { AnonCredsRegistryService } from './services/registry/AnonCredsRegistryService'
+import { AnonCredsRegistryService } from './services'
+import { ZkSyncAnonCredsRegistry } from '../../zksync/src/ZkSyncAnonCredsRegistry'
 import { updateAnonCredsModuleV0_3_1ToV0_4 } from './updates/0.3.1-0.4'
 import { updateAnonCredsModuleV0_4ToV0_5 } from './updates/0.4-0.5'
 
@@ -37,6 +38,7 @@ export class AnonCredsModule implements Module {
     dependencyManager.registerInstance(AnonCredsModuleConfig, this.config)
 
     dependencyManager.registerSingleton(AnonCredsRegistryService)
+    dependencyManager.registerSingleton(ZkSyncAnonCredsRegistry)
 
     // Repositories
     dependencyManager.registerSingleton(AnonCredsSchemaRepository)
