@@ -10,6 +10,9 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     "../contracts/ZkSyncDidRegistry.abi.json": "<rootDir>/contracts/ZkSyncDidRegistry.abi.json",
   },
+  transform: {
+    "\\.bin$": "<rootDir>/__mocks__/binTransformer.js",
+  },
 }
 
 export default config

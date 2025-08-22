@@ -21,6 +21,7 @@ export class ZkSyncDidResolver implements DidResolver {
   constructor(contractAddress: string) {
     this.contractAddress = contractAddress;
   }
+  public readonly allowsCaching = false;
   public readonly supportedMethods = ['zksync']
 
   public async resolve(agentContext: AgentContext, did: string): Promise<DidResolutionResult> {

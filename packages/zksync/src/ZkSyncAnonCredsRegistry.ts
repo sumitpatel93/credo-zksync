@@ -16,36 +16,10 @@ import type {
 } from '@credo-ts/anoncreds'
 import { Contract, ethers } from 'ethers'
 
-// NOTE: This ABI is a placeholder. The actual ABI needs to be generated after compiling the updated smart contract.
-const ZkSyncDidRegistryAbi = [
-  // Existing DID methods
-  "function identityOwner(address identity) view returns (address)",
-  "function changeOwner(address identity, address newOwner)",
-  "function addDelegate(address identity, bytes32 delegateType, address delegate, uint validTo)",
-  "function revokeDelegate(address identity, bytes32 delegateType, address delegate)",
-  "function setAttribute(address identity, bytes32 name, bytes calldata value, uint validTo)",
-  "function revokeAttribute(address identity, bytes32 name, bytes calldata value)",
-
-  // AnonCreds methods
-  "function schemas(bytes32 schemaId) view returns (string)",
-  "function credentialDefinitions(bytes32 credentialDefinitionId) view returns (string)",
-  "function revocationRegistryDefinitions(bytes32 revocationRegistryDefinitionId) view returns (string)",
-  "function revocationStatusLists(bytes32 statusListId) view returns (string)",
-
-  "function registerSchema(bytes32 schemaId, string calldata schema)",
-  "function registerCredentialDefinition(bytes32 credentialDefinitionId, string calldata credentialDefinition)",
-  "function registerRevocationRegistryDefinition(bytes32 revocationRegistryDefinitionId, string calldata revocationRegistryDefinition)",
-  "function registerRevocationStatusList(bytes32 revocationRegistryDefinitionId, uint timestamp, string calldata revocationStatusList)",
-
-  // Events
-  "event SchemaRegistered(bytes32 indexed schemaId, string schema)",
-  "event CredentialDefinitionRegistered(bytes32 indexed credentialDefinitionId, string credentialDefinition)",
-  "event RevocationRegistryDefinitionRegistered(bytes32 indexed revocationRegistryDefinitionId, string revocationRegistryDefinition)",
-  "event RevocationStatusListRegistered(bytes32 indexed revocationRegistryDefinitionId, uint timestamp, string revocationStatusList)",
-]
+import ZkSyncDidRegistryAbi from '../contracts/ZkSyncDidRegistry.abi.json'
 
 // NOTE: This contract address is a placeholder. It needs to be replaced with the actual deployed contract address.
-const ZkSyncDidRegistryContractAddress = '0xYourDeployedContractAddressHere'
+const ZkSyncDidRegistryContractAddress = '0x2886bb3bef431bCC790dE8ccC25C5B5CB80828bE'
 
 export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   public readonly methodName = 'zksync'
@@ -66,9 +40,10 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   }
 
   private async getContractWithSigner(agentContext: AgentContext): Promise<Contract> {
-    // In a real application, you would get a signer from the agentContext's wallet or a configured private key.
-    // For now, we'll use a placeholder signer.
-    const signer = new ethers.Wallet('0xprivateKeyHere', this.provider) // Replace with actual private key or signer
+    if (!agentContext.wallet) {
+      throw new Error('Wallet not found in agentContext')
+    }
+    const signer = agentContext.wallet.signer
     return this.contract.connect(signer)
   }
 
@@ -126,14 +101,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
     }
   }
 
-  schema: options.schema,
-        reason: `Error registering schema ${options.schema.id}: ${error.message}`,
-        },
-        registrationMetadata: {},
-        schemaMetadata: {},
-      }
-    }
-  }
+  
 
   public async getCredentialDefinition(agentContext: AgentContext, credentialDefinitionId: string): Promise<GetCredentialDefinitionReturn> {
     try {
@@ -245,7 +213,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
 
   public async getRevocationStatusList(agentContext: AgentContext, revocationRegistryDefinitionId: string, timestamp: number): Promise<GetRevocationStatusListReturn> {
     try {
-      const statusListId = ethers.utils.id(revocationRegistryDefinitionId + timestamp.toString())
+      const statusListId = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(revocationRegistryDefinitionId + timestamp.toString()))
       const revocationStatusList = await this.contract.revocationStatusLists(statusListId)
       if (!revocationStatusList) {
         return {
