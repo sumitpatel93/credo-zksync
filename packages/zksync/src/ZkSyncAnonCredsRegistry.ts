@@ -16,7 +16,7 @@ import type {
 } from '@credo-ts/anoncreds'
 import { Contract, ethers } from 'ethers'
 
-import ZkSyncDidRegistryAbi from '../contracts/ZkSyncDidRegistry.abi.json'
+import * as ZkSyncDidRegistryAbi from '../contracts/ZkSyncDidRegistry.abi.json'
 
 // NOTE: This contract address is a placeholder. It needs to be replaced with the actual deployed contract address.
 const ZkSyncDidRegistryContractAddress = '0x2886bb3bef431bCC790dE8ccC25C5B5CB80828bE'

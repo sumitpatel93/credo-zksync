@@ -1,9 +1,9 @@
 import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
-import type { AgentContext, DidResolutionResult, DidResolver } from '@credo-ts/core'
-import { DidDocument, TypedArrayEncoder, Buffer } from '@credo-ts/core'
+import { DidDocument, TypedArrayEncoder } from '@credo-ts/core'
 import { Contract, Provider } from 'zksync-ethers'
+import { Buffer } from 'buffer'
 
-import CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
+import * as CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
 
 function padToBytes32(value: string): Buffer {
   const buf = Buffer.from(value)

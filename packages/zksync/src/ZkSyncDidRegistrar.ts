@@ -1,8 +1,9 @@
-import type { AgentContext, DidCreateOptions, DidCreateResult, DidDeactivateResult, DidRegistrar, DidUpdateResult } from '@credo-ts/core'
-import { DidDocument, DidDocumentRole, DidRecord, DidRepository, TypedArrayEncoder, Buffer } from '@credo-ts/core'
+import type { AgentContext, DidCreateOptions, DidCreateResult, DidDeactivateResult, DidRegistrar, DidUpdateOptions, DidUpdateResult, DidDeactivateOptions } from '@credo-ts/core'
+import { DidDocument, DidDocumentRole, DidRecord, DidRepository, TypedArrayEncoder } from '@credo-ts/core'
 import { Contract, Provider, Wallet } from 'zksync-ethers'
+import { Buffer } from 'buffer'
 
-import CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
+import * as CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
 
 function padToBytes32(value: string): Buffer {
   const buf = Buffer.from(value)
@@ -45,7 +46,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
       const tx = await contract.setAttribute(
         wallet.address,
         TypedArrayEncoder.fromString('did/pub/Secp256k1/veriKey/hex'),
-        TypedArrayEncoder.fromString(wallet.publicKey)
+        TypedArrayEncoder.fromString(wallet.signingKey.publicKey)
       )
       await tx.wait()
 
@@ -56,7 +57,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
             id: `${did}#key-1`,
             type: 'EcdsaSecp256k1VerificationKey2019',
             controller: did,
-            publicKeyHex: wallet.publicKey,
+            publicKeyHex: wallet.signingKey.publicKey,
           },
         ],
         authentication: [`${did}#key-1`],
