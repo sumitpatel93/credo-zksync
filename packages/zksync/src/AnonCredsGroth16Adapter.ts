@@ -26,6 +26,10 @@ export interface FormattedProof {
 }
 
 export class AnonCredsGroth16Adapter {
+  // Contract addresses for zkSync Sepolia testnet
+  private readonly ageVerifierAddress = '0x2fe3701d02deB6B22F5B293aC0dd91f601A2B6D9'
+  private readonly registryAddress = '0x4Ce8a725c63048bB42c95b064Ce3262790F1b80D'
+  
   private wasmPath: string
   private provingKeyPath: string
 

@@ -13,7 +13,7 @@ library Pairing {
     }
     
     function pairingProd2(G1Point memory a1, G2Point memory a2, G1Point memory b1, G2Point memory b2) internal view returns (bool) {
-        uint[4] memory input;
+        uint[12] memory input;
         input[0] = a1.X;
         input[1] = a1.Y;
         input[2] = a2.X[0];
