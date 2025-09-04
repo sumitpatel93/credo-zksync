@@ -28,7 +28,7 @@
     "@cheqd/ts-proto": "~2.4.1",
     "@cosmjs/crypto": "~0.30.1",
     "@cosmjs/proto-signing": "~0.30.1",
-    "@cosmjs/stargate": "~0.30.1",
+    "@cosmjs/stargate": "~0.36.0",
     "@credo-ts/anoncreds": "workspace:*",
     "@credo-ts/core": "workspace:*",
     "@stablelib/ed25519": "catalog:",
