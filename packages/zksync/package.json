@@ -23,14 +23,23 @@
     "clean": "rimraf ./build",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "pnpm run build",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "compile:circuit": "node scripts/compile-circuit.js",
+    "setup:trusted": "node scripts/setup-trusted.js",
+    "test:all": "npm run compile:circuit && npm run setup:trusted && npm test"
   },
   "dependencies": {
+    "@credo-ts/anoncreds": "workspace:*",
     "@credo-ts/core": "workspace:*",
     "ethers": "^6.7.1",
+    "snarkjs": "^0.7.3",
     "zksync-ethers": "^6.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "circomlib": "^2.0.5",
     "rimraf": "catalog:",
     "typescript": "catalog:"
   }
