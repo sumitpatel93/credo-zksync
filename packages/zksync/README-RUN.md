@@ -1,6 +1,6 @@
 # Age Verification - Ready to Use
 
-## ✅ Complete Implementation
+## Complete Implementation
 
 All components are ready and working:
 
@@ -17,10 +17,10 @@ All components are ready and working:
 - **Proof generation utilities**
 - **Contract formatting**
 
-### 4. **Tests** ✅
+### 4. **Tests** 
 ```bash
 npm test packages/zksync/src/__tests__/simple-adapter.test.ts
-# ✅ 3 tests passed
+#  3 tests passed
 ```
 
 ## 🚀 Usage Example
@@ -50,13 +50,13 @@ const registry = new ethers.Contract(address, abi, signer)
 const result = await registry.verifyAgeView(proof.a, proof.b, proof.c, 18)
 ```
 
-## 🎯 Ready for Production
+##  Ready for Production
 
 **All features implemented:**
-- ✅ Age verification circuit
-- ✅ Solidity contracts
-- ✅ TypeScript integration
-- ✅ Comprehensive tests
-- ✅ Documentation
+-  Age verification circuit
+-  Solidity contracts
+-  TypeScript integration
+-  Comprehensive tests
+-  Documentation
 
 **Cost**: ~$5-10 per verification on zkSync
