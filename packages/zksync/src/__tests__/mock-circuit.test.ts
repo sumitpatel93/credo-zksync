@@ -1,4 +1,3 @@
-import { describe, test, expect } from '@jest/globals'
 import { AnonCredsGroth16Adapter } from '../AnonCredsGroth16Adapter'
 
 // Mock implementation for testing without circuit compilation

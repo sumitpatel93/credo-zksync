@@ -1,4 +1,3 @@
-import { describe, test, expect, beforeAll, beforeEach } from '@jest/globals'
 import { AnonCredsGroth16Adapter } from '../AnonCredsGroth16Adapter'
 
 // Mock fs for testing
@@ -34,47 +33,47 @@ describe('AnonCredsGroth16Adapter', () => {
     test('should extract age from credential attributes', () => {
       const credential = {
         schema_id: 'test-schema',
-        attributes: [
-          { name: 'age', value: '25' },
-          { name: 'name', value: 'Alice' }
-        ]
+        values: {
+          age: { raw: '25', encoded: '25' },
+          name: { raw: 'Alice', encoded: 'Alice' }
+        }
       } as any
 
-      const age = (adapter as any).extractAge(credential)
+      const age = adapter.extractAge(credential)
       expect(age).toBe(25)
     })
 
     test('should throw error if age attribute missing', () => {
       const credential = {
         schema_id: 'test-schema',
-        attributes: [
-          { name: 'name', value: 'Alice' }
-        ]
+        values: {
+          name: { raw: 'Alice', encoded: 'Alice' }
+        }
       } as any
 
-      expect(() => (adapter as any).extractAge(credential)).toThrow('Age attribute not found')
+      expect(() => adapter.extractAge(credential)).toThrow('Age attribute not found')
     })
 
     test('should throw error for invalid age values', () => {
       const credential = {
         schema_id: 'test-schema',
-        attributes: [
-          { name: 'age', value: 'invalid' }
-        ]
+        values: {
+          age: { raw: 'invalid', encoded: 'invalid' }
+        }
       } as any
 
-      expect(() => (adapter as any).extractAge(credential)).toThrow('Invalid age value')
+      expect(() => adapter.extractAge(credential)).toThrow('Invalid age value')
     })
 
     test('should handle edge case ages', () => {
       const credential = {
         schema_id: 'test-schema',
-        attributes: [
-          { name: 'age', value: '0' }
-        ]
+        values: {
+          age: { raw: '0', encoded: '0' }
+        }
       } as any
 
-      const age = (adapter as any).extractAge(credential)
+      const age = adapter.extractAge(credential)
       expect(age).toBe(0)
     })
   })
@@ -124,9 +123,9 @@ describe('AnonCredsGroth16Adapter', () => {
 
       const credential = {
         schema_id: 'test-schema',
-        attributes: [
-          { name: 'age', value: '30' }
-        ]
+        values: {
+          age: { raw: '30', encoded: '30' }
+        }
       } as any
 
       const result = await adapter.convertFromAnonCreds(credential, 21)
@@ -165,14 +164,13 @@ describe('AnonCredsGroth16Adapter', () => {
       const credential = AnonCredsGroth16Adapter.createTestCredential(25)
 
       expect(credential.schema_id).toBe('test-schema-id')
-      expect(credential.attributes[0].value).toBe('25')
-      expect(credential.attributes[0].name).toBe('age')
+      expect(credential.values.age.raw).toBe('25')
     })
 
     test('should create test credential with zero age', () => {
       const credential = AnonCredsGroth16Adapter.createTestCredential(0)
 
-      expect(credential.attributes[0].value).toBe('0')
+      expect(credential.values.age.raw).toBe('0')
     })
   })
 

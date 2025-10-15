@@ -1,4 +1,3 @@
-import { describe, test, expect, beforeAll } from '@jest/globals'
 import { AnonCredsGroth16Adapter } from '../AnonCredsGroth16Adapter'
 import * as snarkjs from 'snarkjs'
 import path from 'path'
