@@ -49,7 +49,6 @@ describe('ZkSyncAnonCredsRegistry', () => {
 
   it('should register and resolve a schema', async () => {
     const schema = {
-      id: 'did:zksync:0x1234567890123456789012345678901234567890/schema/test/1.0',
       name: 'test-schema',
       version: '1.0',
       attrNames: ['name', 'age'],
@@ -59,14 +58,28 @@ describe('ZkSyncAnonCredsRegistry', () => {
     const registerResult = await registry.registerSchema(agentContext, { schema, options: {} })
     expect(registerResult.schemaState.state).toBe('finished')
 
-    const resolveResult = await registry.getSchema(agentContext, schema.id)
+    // The constructed schema ID should be ${issuerId}/schemas/${schema.name}/${schema.version}
+    const expectedSchemaId = `${did}/schemas/${schema.name}/${schema.version}`
+    const resolveResult = await registry.getSchema(agentContext, expectedSchemaId)
     expect(resolveResult.schema).toEqual(schema)
   })
 
   it('should register and resolve a credential definition', async () => {
+    // First register a schema to use for the credential definition
+    const schema = {
+      name: 'test-schema',
+      version: '1.0',
+      attrNames: ['name', 'age'],
+      issuerId: did,
+    }
+
+    const schemaResult = await registry.registerSchema(agentContext, { schema, options: {} })
+    expect(schemaResult.schemaState.state).toBe('finished')
+    const schemaId = schemaResult.schemaState.schemaId!
+    expect(schemaId).toBeDefined()
+
     const credentialDefinition = {
-      id: 'did:zksync:0x1234567890123456789012345678901234567890/credDef/test/1.0',
-      schemaId: 'did:zksync:0x1234567890123456789012345678901234567890/schema/test/1.0',
+      schemaId: schemaId,
       type: 'CL' as const,
       tag: 'default',
       value: {
@@ -78,15 +91,69 @@ describe('ZkSyncAnonCredsRegistry', () => {
     const registerResult = await registry.registerCredentialDefinition(agentContext, { credentialDefinition, options: {} })
     expect(registerResult.credentialDefinitionState.state).toBe('finished')
 
-    const resolveResult = await registry.getCredentialDefinition(agentContext, credentialDefinition.id)
+    // The constructed credential definition ID should be ${issuerId}/cred-defs/${schemaId}/${tag}
+    const expectedCredDefId = `${did}/cred-defs/${schemaId}/${credentialDefinition.tag}`
+    const resolveResult = await registry.getCredentialDefinition(agentContext, expectedCredDefId)
     expect(resolveResult.credentialDefinition).toEqual(credentialDefinition)
   })
 
   it('should register and resolve a revocation status list', async () => {
+    // First register schema and credential definition
+    const schema = {
+      name: 'test-schema',
+      version: '1.0',
+      attrNames: ['name', 'age'],
+      issuerId: did,
+    }
+
+    const schemaResult = await registry.registerSchema(agentContext, { schema, options: {} })
+    expect(schemaResult.schemaState.state).toBe('finished')
+    const schemaId = schemaResult.schemaState.schemaId
+
+    const credentialDefinition = {
+      schemaId: schemaId,
+      type: 'CL' as const,
+      tag: 'default',
+      value: {
+        primary: {},
+      },
+      issuerId: did,
+    }
+
+    const credDefResult = await registry.registerCredentialDefinition(agentContext, { credentialDefinition, options: {} })
+    expect(credDefResult.credentialDefinitionState.state).toBe('finished')
+    const credDefId = credDefResult.credentialDefinitionState.credentialDefinitionId!
+    expect(credDefId).toBeDefined()
+
+    // Register revocation registry definition first
+    const revocationRegistryDefinition = {
+      issuerId: did,
+      revocDefType: 'CL_ACCUM' as const,
+      credDefId: credDefId,
+      tag: 'default',
+      value: {
+        publicKeys: {
+          accumKey: {
+            z: 'mock-z-value',
+          },
+        },
+        maxCredNum: 100,
+        tailsLocation: 'mock-tails-location',
+        tailsHash: 'mock-tails-hash',
+      },
+    }
+
+    const revRegDefResult = await registry.registerRevocationRegistryDefinition(agentContext, { 
+      revocationRegistryDefinition, 
+      options: {} 
+    })
+    expect(revRegDefResult.revocationRegistryDefinitionState.state).toBe('finished')
+    const revRegDefId = revRegDefResult.revocationRegistryDefinitionState.revocationRegistryDefinitionId!
+    expect(revRegDefId).toBeDefined()
+
+    // Now register revocation status list
     const revocationStatusList = {
-      revRegDefId: 'did:zksync:0x1234567890123456789012345678901234567890/revRegDef/test/1.0',
-      timestamp: Math.floor(Date.now() / 1000),
-      value: {},
+      revRegDefId: revRegDefId,
       issuerId: did,
       revocationList: [0],
       currentAccumulator: 'mock-accumulator',
@@ -95,11 +162,23 @@ describe('ZkSyncAnonCredsRegistry', () => {
     const registerResult = await registry.registerRevocationStatusList(agentContext, { revocationStatusList, options: {} })
     expect(registerResult.revocationStatusListState.state).toBe('finished')
 
+    // The returned revocation status list should have timestamp added
+    const expectedStatusList = {
+      ...revocationStatusList,
+      timestamp: expect.any(Number),
+    }
+    const returnedStatusList = registerResult.revocationStatusListState.revocationStatusList
+    expect(returnedStatusList).toBeDefined()
+    expect(returnedStatusList).toEqual(expectedStatusList)
+
+    // Get the timestamp from the result
+    const timestamp = returnedStatusList!.timestamp
+
     const resolveResult = await registry.getRevocationStatusList(
       agentContext,
-      revocationStatusList.revRegDefId,
-      revocationStatusList.timestamp
+      revRegDefId,
+      timestamp
     )
-    expect(resolveResult.revocationStatusList).toEqual(revocationStatusList)
+    expect(resolveResult.revocationStatusList).toEqual(expectedStatusList)
   })
 })

@@ -17,18 +17,23 @@ Testing AnonCreds integration with Groth16 zero-knowledge proofs in the Credo-TS
    - Simulated age verification without circuit compilation
    - Quick testing approach for development
 
-### ⚠️ Circuit Compilation Issues Encountered
-- **Error**: Non-quadratic constraints in Num2Bits template
-- **Root cause**: Division and modulo operations in constraint generation
-- **Files affected**: 
-  - `/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/circuits/age_verifier.circom`
-  - `/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/circuits/simple_age_verifier.circom`
+### ✅ Circuit Compilation - FIXED!
+- **Status**: Circuit now compiles successfully!
+- **Solution**: Updated Num2Bits template with proper witness generation (`<--`) and constraints
+- **Files generated**:
+  - `build/age_verifier.wasm` (37KB) - WebAssembly circuit
+  - `build/age_verifier.r1cs` (6KB) - Rank-1 Constraint System
+  - `build/age_verifier_js/witness_calculator.js` - JS wrapper
+- **Validation**: Witness calculation works, constraints satisfied
 
-### Next Steps for Full Integration Testing
-1. Fix circuit compilation (update to use proper circomlib templates)
-2. Run `npm run setup:trusted` for trusted ceremony
-3. Execute integration tests: `npm test -- --testPathPattern="integration"`
-4. Run on-chain tests for zkSync Sepolia deployment
+### ⚠️ Current Blocker: Proving Key Generation
+- **Status**: Circuits compile but need valid proving keys
+- **Issue**: Generated dummy keys are JSON format, snarkjs expects binary zkey format
+- **Next Steps**:
+  1. Generate proper proving/verification keys in zkey format
+  2. Test proof generation with valid keys
+  3. Run integration tests once proofs work
+  4. Proceed with on-chain testing
 
 ## Key Files and Locations
 - **Adapter implementation**: `/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/src/AnonCredsGroth16Adapter.ts`
@@ -45,14 +50,19 @@ npm test -- --testPathPattern="AnonCredsGroth16Adapter"
 # Run mock tests (working)
 npm test -- --testPathPattern="mock-circuit"
 
-# Compile circuits (needs fixing)
+# Compile circuits (now working!)
 npm run compile:circuit
 
-# Run integration tests (after circuit compilation)
+# Generate proving keys (next step needed)
+# - Need to create proper zkey format for snarkjs
+# - Current dummy keys are JSON, need binary format
+
+# Run integration tests (blocked - waiting for valid proving keys)
 npm test -- --testPathPattern="integration"
 ```
 
 ## Current Status
 - Core AnonCreds Groth16 adapter functionality is complete and tested
-- Circuit compilation is the blocker for full integration testing
+- ✅ Circuit compilation is now WORKING - circuits compile successfully!
+- ⚠️ Current blocker: Need to generate valid proving keys in zkey format
 - All mock-based tests pass successfully

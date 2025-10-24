@@ -3,7 +3,7 @@ import { AgentContext } from '@credo-ts/core'
 import { AnonCredsSchema } from '@credo-ts/anoncreds'
 
 // Mock ethers for testing
-const mockEthers = {
+const mockEthers: any = {
   JsonRpcProvider: jest.fn(() => ({
     // Mock provider methods if needed
   })),
@@ -46,8 +46,6 @@ describe('ZkSyncAnonCredsRegistry', () => {
         name: 'test-schema',
         version: '1.0',
         issuerId: 'did:zksync:test-issuer',
-        id: schemaId,
-        seqNo: 1,
       }
       mockEthers.Contract().schemas.mockResolvedValueOnce(JSON.stringify(mockSchema))
 
@@ -90,8 +88,6 @@ describe('ZkSyncAnonCredsRegistry', () => {
         name: 'new-schema',
         version: '1.0',
         issuerId: 'did:zksync:new-issuer',
-        id: schemaId,
-        seqNo: 1,
       }
       mockEthers.Contract().registerSchema.mockResolvedValueOnce({ wait: jest.fn().mockResolvedValueOnce({}) })
 
@@ -109,8 +105,6 @@ describe('ZkSyncAnonCredsRegistry', () => {
         name: 'fail-schema',
         version: '1.0',
         issuerId: 'did:zksync:fail-issuer',
-        id: schemaId,
-        seqNo: 1,
       }
       const errorMessage = 'Transaction failed'
       mockEthers.Contract().registerSchema.mockRejectedValueOnce(new Error(errorMessage))
@@ -119,7 +113,7 @@ describe('ZkSyncAnonCredsRegistry', () => {
 
       expect(mockEthers.Contract().registerSchema).toHaveBeenCalledWith(`mocked_id_${schemaId}`, JSON.stringify(mockSchema))
       expect(result.schemaState.state).toBe('failed')
-      expect(result.schemaState.reason).toBe(`Error registering schema ${schemaId}: ${errorMessage}`)
+      expect((result.schemaState as any).reason).toBe(`Error registering schema ${schemaId}: ${errorMessage}`)
     })
   })
 })

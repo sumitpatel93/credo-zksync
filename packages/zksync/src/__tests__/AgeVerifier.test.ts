@@ -1,4 +1,3 @@
-import { describe, test, expect, beforeAll } from '@jest/globals'
 import * as snarkjs from 'snarkjs'
 import { promises as fs } from 'fs'
 import path from 'path'

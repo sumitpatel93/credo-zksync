@@ -1,6 +1,5 @@
-import { describe, test, expect, beforeAll } from '@jest/globals'
 import { ethers } from 'ethers'
-import { AgeVerificationRegistry__factory } from '../typechain-types'
+import { AgeVerificationRegistry__factory } from '../../typechain-types'
 
 describe('AgeVerificationRegistry', () => {
   let registry: any

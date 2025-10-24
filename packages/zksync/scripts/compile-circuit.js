@@ -12,11 +12,29 @@ async function compileCircuit() {
       fs.mkdirSync(buildDir, { recursive: true });
     }
     
-    // Compile circuit with correct working directory
-    execSync('circom ./circuits/age_verifier.circom --r1cs --wasm --sym --output ./build', { 
-      stdio: 'inherit',
-      cwd: path.join(__dirname, '..')
-    });
+    // Try using circom2 to compile the circuit
+    try {
+      execSync('npx circom2 ./circuits/age_verifier.circom --r1cs --wasm --sym -o ./build/', { 
+        stdio: 'inherit',
+        cwd: path.join(__dirname, '..')
+      });
+    } catch (circom2Error) {
+      console.log('Circom2 compilation failed, trying snarkjs...');
+      // Try using snarkjs to compile the circuit
+      try {
+        execSync('npx snarkjs circom ./circuits/age_verifier.circom --r1cs --wasm --sym -o ./build/', { 
+          stdio: 'inherit',
+          cwd: path.join(__dirname, '..')
+        });
+      } catch (snarkjsError) {
+        console.log('SnarkJS compilation failed, trying global circom...');
+        // Fallback to global circom
+        execSync('circom ./circuits/age_verifier.circom --r1cs --wasm --sym --output ./build', { 
+          stdio: 'inherit',
+          cwd: path.join(__dirname, '..')
+        });
+      }
+    }
     
     console.log('Circuit compiled successfully!');
     console.log('Files generated:');

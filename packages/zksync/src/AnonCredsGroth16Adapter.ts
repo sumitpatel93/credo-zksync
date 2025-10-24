@@ -1,5 +1,5 @@
 import { AgentContext } from '@credo-ts/core'
-import { AnonCredsCredential, AnonCredsPresentation } from '@credo-ts/anoncreds'
+import { AnonCredsCredential } from '@credo-ts/anoncreds'
 import snarkjs from 'snarkjs'
 import { promises as fs } from 'fs'
 import path from 'path'
@@ -41,13 +41,13 @@ export class AnonCredsGroth16Adapter {
   /**
    * Extract age from AnonCreds credential attributes
    */
-  private extractAge(credential: AnonCredsCredential): number {
-    const ageAttribute = credential.attributes.find(attr => attr.name === 'age')
-    if (!ageAttribute) {
+  public extractAge(credential: AnonCredsCredential): number {
+    const ageValue = credential.values.age
+    if (!ageValue) {
       throw new Error('Age attribute not found in credential')
     }
     
-    const age = parseInt(ageAttribute.value)
+    const age = parseInt(ageValue.raw)
     if (isNaN(age) || age < 0 || age > 150) {
       throw new Error('Invalid age value')
     }

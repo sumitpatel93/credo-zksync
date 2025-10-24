@@ -15,6 +15,7 @@ import type {
   RegisterSchemaReturn,
 } from '@credo-ts/anoncreds'
 import { Contract, ethers } from 'ethers'
+import { InjectionSymbols } from '@credo-ts/core'
 
 import * as ZkSyncDidRegistryAbi from '../contracts/ZkSyncDidRegistry.abi.json'
 
@@ -40,16 +41,26 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   }
 
   private async getContractWithSigner(agentContext: AgentContext): Promise<Contract> {
-    if (!agentContext.wallet) {
-      throw new Error('Wallet not found in agentContext')
+    try {
+      // Try to get wallet from dependency manager
+      const wallet = agentContext.dependencyManager.tryResolve<any>('Wallet')
+      if (!wallet?.signer) {
+        throw new Error('Wallet with signer not found in dependency manager')
+      }
+      return this.contract.connect(wallet.signer)
+    } catch (error) {
+      // Fallback: try to get wallet directly from agentContext (for testing)
+      const wallet = (agentContext as any).wallet
+      if (!wallet?.signer) {
+        throw new Error('Wallet with signer not found. Ensure wallet is registered in dependency manager or agentContext.')
+      }
+      return this.contract.connect(wallet.signer)
     }
-    const signer = agentContext.wallet.signer
-    return this.contract.connect(signer)
   }
 
   public async getSchema(agentContext: AgentContext, schemaId: string): Promise<GetSchemaReturn> {
     try {
-      const schema = await this.contract.schemas(ethers.utils.id(schemaId)) // Using ethers.utils.id for bytes32 hashing
+      const schema = await this.contract.schemas(ethers.id(schemaId)) // Using ethers.id for bytes32 hashing
       if (!schema) {
         return {
           schemaId,
@@ -75,7 +86,9 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   public async registerSchema(agentContext: AgentContext, options: RegisterSchemaOptions): Promise<RegisterSchemaReturn> {
     try {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
-      const schemaIdBytes = ethers.utils.id(options.schema.id)
+      // Construct schema ID: ${issuerId}/schemas/${schema.name}/${schema.version}
+      const schemaId = `${options.schema.issuerId}/schemas/${options.schema.name}/${options.schema.version}`
+      const schemaIdBytes = ethers.id(schemaId)
       const tx = await contractWithSigner.registerSchema(schemaIdBytes, JSON.stringify(options.schema))
       await tx.wait()
 
@@ -83,7 +96,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
         schemaState: {
           state: 'finished',
           schema: options.schema,
-          schemaId: options.schema.id,
+          schemaId,
         },
         registrationMetadata: { transactionHash: tx.hash },
         schemaMetadata: {},
@@ -105,7 +118,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
 
   public async getCredentialDefinition(agentContext: AgentContext, credentialDefinitionId: string): Promise<GetCredentialDefinitionReturn> {
     try {
-      const credentialDefinition = await this.contract.credentialDefinitions(ethers.utils.id(credentialDefinitionId))
+      const credentialDefinition = await this.contract.credentialDefinitions(ethers.id(credentialDefinitionId))
       if (!credentialDefinition) {
         return {
           credentialDefinitionId,
@@ -131,7 +144,11 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   public async registerCredentialDefinition(agentContext: AgentContext, options: RegisterCredentialDefinitionOptions): Promise<RegisterCredentialDefinitionReturn> {
     try {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
-      const credentialDefinitionIdBytes = ethers.utils.id(options.credentialDefinition.id)
+      // Use the provided schemaId directly, assuming it's already properly constructed
+      const schemaId = options.credentialDefinition.schemaId
+      // Construct credential definition ID: ${issuerId}/cred-defs/${schemaId}/${tag}
+      const credentialDefinitionId = `${options.credentialDefinition.issuerId}/cred-defs/${schemaId}/${options.credentialDefinition.tag}`
+      const credentialDefinitionIdBytes = ethers.id(credentialDefinitionId)
       const tx = await contractWithSigner.registerCredentialDefinition(credentialDefinitionIdBytes, JSON.stringify(options.credentialDefinition))
       await tx.wait()
 
@@ -139,7 +156,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
         credentialDefinitionState: {
           state: 'finished',
           credentialDefinition: options.credentialDefinition,
-          credentialDefinitionId: options.credentialDefinition.id,
+          credentialDefinitionId,
         },
         registrationMetadata: { transactionHash: tx.hash },
         credentialDefinitionMetadata: {},
@@ -149,7 +166,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
         credentialDefinitionState: {
           state: 'failed',
           credentialDefinition: options.credentialDefinition,
-          reason: `Error registering credential definition ${options.credentialDefinition.id}: ${error.message}`,
+          reason: `Error registering credential definition: ${error.message}`,
         },
         registrationMetadata: {},
         credentialDefinitionMetadata: {},
@@ -159,7 +176,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
 
   public async getRevocationRegistryDefinition(agentContext: AgentContext, revocationRegistryDefinitionId: string): Promise<GetRevocationRegistryDefinitionReturn> {
     try {
-      const revocationRegistryDefinition = await this.contract.revocationRegistryDefinitions(ethers.utils.id(revocationRegistryDefinitionId))
+      const revocationRegistryDefinition = await this.contract.revocationRegistryDefinitions(ethers.id(revocationRegistryDefinitionId))
       if (!revocationRegistryDefinition) {
         return {
           revocationRegistryDefinitionId,
@@ -183,9 +200,11 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   }
 
   public async registerRevocationRegistryDefinition(agentContext: AgentContext, options: RegisterRevocationRegistryDefinitionOptions): Promise<RegisterRevocationRegistryDefinitionReturn> {
+    let revocationRegistryDefinitionId: string
     try {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
-      const revocationRegistryDefinitionIdBytes = ethers.utils.id(options.revocationRegistryDefinition.id)
+      revocationRegistryDefinitionId = `${options.revocationRegistryDefinition.issuerId}/anoncreds/v0/REV_REG_DEF/${options.revocationRegistryDefinition.credDefId}/${options.revocationRegistryDefinition.tag}`
+      const revocationRegistryDefinitionIdBytes = ethers.id(revocationRegistryDefinitionId)
       const tx = await contractWithSigner.registerRevocationRegistryDefinition(revocationRegistryDefinitionIdBytes, JSON.stringify(options.revocationRegistryDefinition))
       await tx.wait()
 
@@ -193,7 +212,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
         revocationRegistryDefinitionState: {
           state: 'finished',
           revocationRegistryDefinition: options.revocationRegistryDefinition,
-          revocationRegistryDefinitionId: options.revocationRegistryDefinition.id,
+          revocationRegistryDefinitionId,
         },
         registrationMetadata: { transactionHash: tx.hash },
         revocationRegistryDefinitionMetadata: {},
@@ -203,7 +222,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
         revocationRegistryDefinitionState: {
           state: 'failed',
           revocationRegistryDefinition: options.revocationRegistryDefinition,
-          reason: `Error registering revocation registry definition ${options.revocationRegistryDefinition.id}: ${error.message}`,
+          reason: `Error registering revocation registry definition ${revocationRegistryDefinitionId!}: ${error.message}`,
         },
         registrationMetadata: {},
         revocationRegistryDefinitionMetadata: {},
@@ -211,13 +230,15 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
     }
   }
 
-  public async getRevocationStatusList(agentContext: AgentContext, revocationRegistryDefinitionId: string, timestamp: number): Promise<GetRevocationStatusListReturn> {
+  public async getRevocationStatusList(agentContext: AgentContext, revocationRegistryDefinitionId: string, timestamp?: number): Promise<GetRevocationStatusListReturn> {
     try {
-      const statusListId = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(revocationRegistryDefinitionId + timestamp.toString()))
+      // Use current timestamp if not provided
+      const effectiveTimestamp = timestamp || Date.now()
+      const statusListId = ethers.keccak256(ethers.toUtf8Bytes(revocationRegistryDefinitionId + effectiveTimestamp.toString()))
       const revocationStatusList = await this.contract.revocationStatusLists(statusListId)
       if (!revocationStatusList) {
         return {
-          resolutionMetadata: { error: 'notFound', message: `Revocation status list for ${revocationRegistryDefinitionId} at timestamp ${timestamp} not found.` },
+          resolutionMetadata: { error: 'notFound', message: `Revocation status list for ${revocationRegistryDefinitionId} at timestamp ${effectiveTimestamp} not found.` },
           revocationStatusListMetadata: {},
         }
       }
@@ -228,7 +249,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
       }
     } catch (error) {
       return {
-        resolutionMetadata: { error: 'error', message: `Error retrieving revocation status list for ${revocationRegistryDefinitionId} at timestamp ${timestamp}: ${error.message}` },
+        resolutionMetadata: { error: 'error', message: `Error retrieving revocation status list for ${revocationRegistryDefinitionId} at timestamp ${timestamp || 'current'}: ${error.message}` },
         revocationStatusListMetadata: {},
       }
     }
@@ -237,17 +258,25 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
   public async registerRevocationStatusList(agentContext: AgentContext, options: RegisterRevocationStatusListOptions): Promise<RegisterRevocationStatusListReturn> {
     try {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
+      // Use current timestamp since AnonCredsRevocationStatusListWithoutTimestamp doesn't have timestamp
+      const timestamp = Date.now()
       const tx = await contractWithSigner.registerRevocationStatusList(
-        ethers.utils.id(options.revocationStatusList.revRegDefId),
-        options.revocationStatusList.timestamp,
+        ethers.id(options.revocationStatusList.revRegDefId),
+        timestamp,
         JSON.stringify(options.revocationStatusList)
       )
       await tx.wait()
 
+      // Add timestamp to create AnonCredsRevocationStatusListWithOptionalTimestamp
+      const revocationStatusListWithTimestamp = {
+        ...options.revocationStatusList,
+        timestamp,
+      }
+
       return {
         revocationStatusListState: {
           state: 'finished',
-          revocationStatusList: options.revocationStatusList,
+          revocationStatusList: revocationStatusListWithTimestamp,
         },
         registrationMetadata: { transactionHash: tx.hash },
         revocationStatusListMetadata: {},

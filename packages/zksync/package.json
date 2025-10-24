@@ -27,7 +27,8 @@
     "test:watch": "jest --watch",
     "compile:circuit": "node scripts/compile-circuit.js",
     "setup:trusted": "node scripts/setup-trusted.js",
-    "test:all": "npm run compile:circuit && npm run setup:trusted && npm test"
+    "test:all": "npm run compile:circuit && npm run setup:trusted && npm test",
+    "typechain": "hardhat typechain"
   },
   "dependencies": {
     "@credo-ts/anoncreds": "workspace:*",
@@ -37,10 +38,14 @@
     "zksync-ethers": "^6.0.0"
   },
   "devDependencies": {
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
+    "circom2": "^0.2.22",
     "circomlib": "^2.0.5",
     "rimraf": "catalog:",
+    "typechain": "^8.3.2",
     "typescript": "catalog:"
   }
 }

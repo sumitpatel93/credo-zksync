@@ -6,9 +6,13 @@
 - Age extraction from credentials
 - Proof generation pipeline (without real circuits)
 
+## ✅ Now Working
+- Circuit compilation (FIXED!)
+- WASM files generated successfully
+
 ## ⚠️ Needs Fix
-- Circuit compilation (Num2Bits template issues)
-- Integration tests (blocked by missing .wasm files)
+- Proving key generation (need zkey format)
+- Integration tests (blocked by invalid proving keys)
 - On-chain verification tests
 
 ## Quick Test Commands
