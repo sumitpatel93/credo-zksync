@@ -1,6 +1,6 @@
 # Quick Start: Test AnonCreds Age Verification
 
-## 🚀 One-Command Testing
+## One-Command Testing
 
 Test the complete flow with a single command:
 
@@ -15,15 +15,15 @@ node cli/test-age-proof-simple.js generate 30 21
 node cli/test-age-proof-simple.js test-scenarios
 ```
 
-## 📊 What You'll See
+## What You'll See
 
 The CLI will show you:
-1. ✅ Proof generation
-2. 📝 Solidity-compatible format
-3. 🔍 Proof verification
-4. 🎉 Success message
+1. Proof generation
+2. Solidity-compatible format
+3. Proof verification
+4. Success message
 
-## 🔧 Quick Commands
+## Quick Commands
 
 ### Generate a Proof
 ```bash
@@ -46,14 +46,14 @@ node cli/test-age-proof-simple.js test-scenarios
 ./examples/test-age.sh 25 18
 ```
 
-## 🎯 Result
+## Result
 
 You'll get a complete, verifiable proof ready for on-chain submission!
 
-## 📁 Files Generated
+## Files Generated
 
 The proofs are formatted for Solidity and ready to use in your smart contracts.
 
-## 🎉 Success!
+## Success!
 
 The complete flow from AnonCreds credentials to on-chain age verification is working!

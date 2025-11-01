@@ -23,7 +23,7 @@ npm test packages/zksync/src/__tests__/simple-adapter.test.ts
 #  3 tests passed
 ```
 
-## 🚀 Usage Example
+## Usage Example
 
 ```typescript
 // 1. Create credential
@@ -53,10 +53,10 @@ const result = await registry.verifyAgeView(proof.a, proof.b, proof.c, 18)
 ##  Ready for Production
 
 **All features implemented:**
--  Age verification circuit
--  Solidity contracts
--  TypeScript integration
--  Comprehensive tests
--  Documentation
+- Age verification circuit
+- Solidity contracts
+- TypeScript integration
+- Comprehensive tests
+- Documentation
 
 **Cost**: ~$5-10 per verification on zkSync
