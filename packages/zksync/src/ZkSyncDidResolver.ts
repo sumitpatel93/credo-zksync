@@ -3,7 +3,7 @@ import { DidDocument, TypedArrayEncoder } from '@credo-ts/core'
 import { Contract, Provider } from 'zksync-ethers'
 import { Buffer } from 'buffer'
 
-import * as CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
+import CONTRACT_ARTIFACT from '../contracts/ZkSyncDidRegistry.abi.json'
 
 function padToBytes32(value: string): Buffer {
   const buf = Buffer.from(value)
@@ -30,7 +30,7 @@ export class ZkSyncDidResolver implements DidResolver {
     try {
       // Connect to the zkSync Sepolia Testnet
       const provider = new Provider('https://sepolia.era.zksync.dev')
-      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, provider)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT as any, provider)
 
       const identity = did.split(':')[2]
 
@@ -64,7 +64,7 @@ export class ZkSyncDidResolver implements DidResolver {
             id: `${did}#key-1`,
             type: 'EcdsaSecp256k1VerificationKey2019',
             controller: did,
-            publicKeyHex: TypedArrayEncoder.toString(publicKeyHex),
+            publicKeyHex: publicKeyHex as string,
           },
         ],
         authentication: [`${did}#key-1`],
@@ -94,7 +94,7 @@ export class ZkSyncDidResolver implements DidResolver {
   public async resolveDelegate(agentContext: AgentContext, did: string, type: string): Promise<string | null> {
     try {
       const provider = new Provider('https://sepolia.era.zksync.dev')
-      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT.abi, provider)
+      const contract = new Contract(this.contractAddress, CONTRACT_ARTIFACT as any, provider)
 
       const identity = did.split(':')[2]
 

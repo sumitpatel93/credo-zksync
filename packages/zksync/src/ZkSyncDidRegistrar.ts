@@ -116,7 +116,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         didState: {
           state: 'finished',
           did: options.did,
-          didDocument: options.didDocument,
+          didDocument: options.didDocument as DidDocument,
         },
       }
     } catch (error) {
@@ -152,7 +152,10 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         didState: {
           state: 'finished',
           did: options.did,
-          didDocument: undefined // No didDocument available for deactivate operation
+          didDocument: new DidDocument({
+            id: options.did,
+            controller: options.did,
+          })
         },
       }
     } catch (error) {
@@ -177,7 +180,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         validTo: number
       }
       secret?: {
-        privateKey?: Buffer
+        privateKey?: string | Buffer
       }
     }
   ): Promise<{ transactionHash: string }> {
@@ -214,7 +217,7 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
         address: string
       }
       secret?: {
-        privateKey?: Buffer
+        privateKey?: string | Buffer
       }
     }
   ): Promise<{ transactionHash: string }> {

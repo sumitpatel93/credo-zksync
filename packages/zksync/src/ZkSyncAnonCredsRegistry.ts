@@ -89,7 +89,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
       // Construct schema ID: ${issuerId}/schemas/${schema.name}/${schema.version}
       const schemaId = `${options.schema.issuerId}/schemas/${options.schema.name}/${options.schema.version}`
       const schemaIdBytes = ethers.id(schemaId)
-      const tx = await contractWithSigner.registerSchema(schemaIdBytes, JSON.stringify(options.schema))
+      const tx = await (contractWithSigner as any).registerSchema(schemaIdBytes, JSON.stringify(options.schema))
       await tx.wait()
 
       return {
@@ -149,7 +149,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
       // Construct credential definition ID: ${issuerId}/cred-defs/${schemaId}/${tag}
       const credentialDefinitionId = `${options.credentialDefinition.issuerId}/cred-defs/${schemaId}/${options.credentialDefinition.tag}`
       const credentialDefinitionIdBytes = ethers.id(credentialDefinitionId)
-      const tx = await contractWithSigner.registerCredentialDefinition(credentialDefinitionIdBytes, JSON.stringify(options.credentialDefinition))
+      const tx = await (contractWithSigner as any).registerCredentialDefinition(credentialDefinitionIdBytes, JSON.stringify(options.credentialDefinition))
       await tx.wait()
 
       return {
@@ -205,7 +205,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
       revocationRegistryDefinitionId = `${options.revocationRegistryDefinition.issuerId}/anoncreds/v0/REV_REG_DEF/${options.revocationRegistryDefinition.credDefId}/${options.revocationRegistryDefinition.tag}`
       const revocationRegistryDefinitionIdBytes = ethers.id(revocationRegistryDefinitionId)
-      const tx = await contractWithSigner.registerRevocationRegistryDefinition(revocationRegistryDefinitionIdBytes, JSON.stringify(options.revocationRegistryDefinition))
+      const tx = await (contractWithSigner as any).registerRevocationRegistryDefinition(revocationRegistryDefinitionIdBytes, JSON.stringify(options.revocationRegistryDefinition))
       await tx.wait()
 
       return {
@@ -260,7 +260,7 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
       const contractWithSigner = await this.getContractWithSigner(agentContext)
       // Use current timestamp since AnonCredsRevocationStatusListWithoutTimestamp doesn't have timestamp
       const timestamp = Date.now()
-      const tx = await contractWithSigner.registerRevocationStatusList(
+      const tx = await (contractWithSigner as any).registerRevocationStatusList(
         ethers.id(options.revocationStatusList.revRegDefId),
         timestamp,
         JSON.stringify(options.revocationStatusList)

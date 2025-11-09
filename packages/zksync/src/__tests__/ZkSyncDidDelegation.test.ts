@@ -27,17 +27,17 @@ describe('ZkSyncDidDelegation', () => {
     await deployedContract.waitForDeployment()
     const contractAddress = await deployedContract.getAddress()
     console.log(`Contract Address: ${contractAddress}`)
-    console.log(`Contract Deployment Tx Hash: ${(await deployedContract.deploymentTransaction()).hash}`)
+    const deploymentTx = await deployedContract.deploymentTransaction()
+    if (deploymentTx) {
+      console.log(`Contract Deployment Tx Hash: ${deploymentTx.hash}`)
+    }
 
     registrar = new ZkSyncDidRegistrar(contractAddress)
     resolver = new ZkSyncDidResolver(contractAddress)
 
     // Mock AgentContext
-    agentContext = new AgentContext({
-      config: {
-        label: 'test-agent',
-        logger: new ConsoleLogger(LogLevel.off),
-      },
+    agentContext = {
+      contextCorrelationId: 'test',
       dependencyManager: {
         resolve: (symbol: any) => {
           if (symbol === DidRepository) {
@@ -49,7 +49,7 @@ describe('ZkSyncDidDelegation', () => {
           return undefined
         },
       } as any,
-    })
+    } as AgentContext
 
     // Create the DID on the ZkSync network
     const createResult = await registrar.create(agentContext, {

@@ -112,7 +112,7 @@ describe('ZkSyncAnonCredsRegistry', () => {
     expect(schemaId).toBeDefined() // Ensure schemaId is defined
 
     const credentialDefinition = {
-      schemaId: schemaId,
+      schemaId: schemaId!,
       type: 'CL' as const,
       tag: 'default',
       value: {
