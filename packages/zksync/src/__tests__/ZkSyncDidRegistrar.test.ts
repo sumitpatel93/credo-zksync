@@ -2,7 +2,7 @@ import { ZkSyncDidRegistrar } from '../ZkSyncDidRegistrar'
 
 describe('ZkSyncDidRegistrar', () => {
   it('should correctly create a did:zksync did', async () => {
-    const registrar = new ZkSyncDidRegistrar()
+    const registrar = new ZkSyncDidRegistrar('0x4Ce8a725c63048bB42c95b064Ce3262790F1b80D')
 
     const agentContext: any = {
       dependencyManager: {

@@ -1,4 +1,5 @@
 const snarkjs = require('snarkjs');
+const { zKey } = snarkjs;
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -48,7 +49,7 @@ async function trustedSetup() {
     
     // Generate proving key
     console.log('Generating proving key...');
-    await snarkjs.groth16.setup(
+    await zKey.newZKey(
       path.join(buildDir, 'age_verifier.r1cs'),
       ptauFile,
       path.join(buildDir, 'proving_key.zkey')
@@ -56,14 +57,14 @@ async function trustedSetup() {
     
     // Generate verification key
     console.log('Generating verification key...');
-    await snarkjs.zkey.exportVerificationKey(
+    await zKey.exportVerificationKey(
       path.join(buildDir, 'proving_key.zkey'),
       path.join(buildDir, 'verification_key.json')
     );
     
     // Generate Solidity verifier
     console.log('Generating Solidity verifier...');
-    await snarkjs.zkey.exportSolidityVerifier(
+    await zKey.exportSolidityVerifier(
       path.join(buildDir, 'proving_key.zkey'),
       path.join(__dirname, '../contracts/AgeVerifier.sol')
     );

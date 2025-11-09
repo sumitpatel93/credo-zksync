@@ -1,6 +1,6 @@
 import { AgentContext } from '@credo-ts/core'
 import { AnonCredsCredential } from '@credo-ts/anoncreds'
-import snarkjs from 'snarkjs'
+import * as snarkjs from 'snarkjs'
 import { promises as fs } from 'fs'
 import path from 'path'
 
@@ -34,8 +34,10 @@ export class AnonCredsGroth16Adapter {
   private provingKeyPath: string
 
   constructor() {
-    this.wasmPath = path.join(__dirname, '../../build/age_verifier.wasm')
-    this.provingKeyPath = path.join(__dirname, '../../build/proving_key.zkey')
+    // Use process.cwd() to ensure correct path resolution in different environments
+    const basePath = process.cwd().endsWith('zksync') ? './build' : './packages/zksync/build'
+    this.wasmPath = path.resolve(process.cwd(), basePath, 'age_verifier_js/age_verifier.wasm')
+    this.provingKeyPath = path.resolve(process.cwd(), basePath, 'proving_key.zkey')
   }
 
   /**

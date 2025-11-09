@@ -109,6 +109,7 @@ describe('ZkSyncAnonCredsRegistry', () => {
     const schemaResult = await registry.registerSchema(agentContext, { schema, options: {} })
     expect(schemaResult.schemaState.state).toBe('finished')
     const schemaId = schemaResult.schemaState.schemaId
+    expect(schemaId).toBeDefined() // Ensure schemaId is defined
 
     const credentialDefinition = {
       schemaId: schemaId,

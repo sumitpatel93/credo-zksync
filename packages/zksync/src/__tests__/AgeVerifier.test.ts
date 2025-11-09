@@ -3,12 +3,17 @@ import { promises as fs } from 'fs'
 import path from 'path'
 
 describe('Age Verification Circuit', () => {
+  beforeAll(() => {
+    console.log('AgeVerifier: Working directory:', process.cwd())
+    console.log('AgeVerifier: WASM path:', path.join(__dirname, '../../build/age_verifier_js/age_verifier.wasm'))
+    console.log('AgeVerifier: Key path:', path.join(__dirname, '../../build/proving_key.zkey'))
+  })
   let wasmPath: string
   let provingKeyPath: string
   let verificationKey: any
 
   beforeAll(async () => {
-    wasmPath = path.join(__dirname, '../../build/age_verifier.wasm')
+    wasmPath = path.join(__dirname, '../../build/age_verifier_js/age_verifier.wasm')
     provingKeyPath = path.join(__dirname, '../../build/proving_key.zkey')
     
     try {
@@ -31,6 +36,10 @@ describe('Age Verification Circuit', () => {
         wasmPath,
         provingKeyPath
       )
+
+      console.log('Age 25, threshold 18: inputs =', inputs)
+      console.log('Public signals:', proof.publicSignals)
+      console.log('Input for circuit - age:', inputs.age, 'threshold:', inputs.age_threshold)
 
       const verified = await snarkjs.groth16.verify(
         verificationKey,
