@@ -1,6 +1,10 @@
 import { HardhatUserConfig } from 'hardhat/config'
 import '@matterlabs/hardhat-zksync-solc'
 import '@typechain/hardhat'
+require('./hardhat-tasks')
+
+import { task } from 'hardhat/config'
+import { ethers } from 'ethers'
 
 const config: HardhatUserConfig = {
   zksolc: {
@@ -32,3 +36,33 @@ const config: HardhatUserConfig = {
 }
 
 export default config
+
+// Helper function to run tasks with proper access
+declare global {
+  var __hardhat_context: any
+}
+
+task("deploy", "Deploy contracts to zkSync", async (taskArgs, hre) => {
+  await runDeployment(hre);
+});
+
+async function runDeployment(hre: any) {
+  const [deployer] = await hre.ethers.getSigners();
+  
+  console.log('🚀 Deploying to zkSync Sepolia...');
+  console.log('Using account:', deployer.address);
+  
+  // Deploy verifier
+  const Verifier = await hre.ethers.getContractFactory('Groth16Verifier');
+  const verifier = await Verifier.deploy();
+  await verifier.deployed();
+  
+  // Deploy registry
+  const Registry = await hre.ethers.getContractFactory('AgeVerificationRegistry');
+  const registry = await Registry.deploy(verifier.address);
+  await registry.deployed();
+  
+  console.log('\n✅ Deployment successful!');
+  console.log('Groth16Verifier:', verifier.address);
+  console.log('AgeVerificationRegistry:', registry.address);
+}

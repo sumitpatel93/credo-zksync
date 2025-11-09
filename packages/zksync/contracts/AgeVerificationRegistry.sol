@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./AgeVerifier.sol";
+import "./AgeVerifierGenerated.sol";
 
 contract AgeVerificationRegistry {
-    AgeVerifier public immutable verifier;
+    Groth16Verifier public immutable verifier;
     
     event AgeVerified(address indexed user, uint256 minAge, uint256 timestamp);
     event VerifierUpdated(address indexed newVerifier);
     
-    constructor(address _verifier) {
-        verifier = AgeVerifier(_verifier);
+    constructor() {
+        // Deploys a new instance of the generated Verifier contract
+        verifier = new Groth16Verifier();
     }
     
     function verifyAge(

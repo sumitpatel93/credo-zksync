@@ -1,0 +1,232 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/contracts/AgeVerificationRegistry.sol": {
+      "lastModificationDate": 1762710135299,
+      "contentHash": "3782a03f6f8c437048945aee89fba1bf",
+      "sourceName": "contracts/AgeVerificationRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": true,
+            "mode": "3"
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "detectMissingLibraries": false,
+          "forceEVMLA": false,
+          "enableEraVMExtensions": false,
+          "libraries": {}
+        },
+        "eraVersion": "1.0.1",
+        "zksolc": {
+          "version": "1.5.7",
+          "compilerSource": "binary",
+          "settings": {
+            "optimizer": {
+              "enabled": true,
+              "mode": "3"
+            },
+            "compilerPath": "/Users/apple/Library/Caches/hardhat-nodejs/compilers-v2/zksolc/zksolc-v1.5.7",
+            "missingLibrariesPath": "./.zksolc-libraries-cache/missingLibraryDependencies.json",
+            "areLibrariesMissing": false,
+            "experimental": {},
+            "libraries": {},
+            "enableEraVMExtensions": false,
+            "forceEVMLA": false
+          }
+        }
+      },
+      "imports": [
+        "./AgeVerifierGenerated.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AgeVerificationRegistry"
+      ]
+    },
+    "/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/contracts/AgeVerifier.sol": {
+      "lastModificationDate": 1762703370786,
+      "contentHash": "0ab6332de38a8034eb0dfd62c61be76a",
+      "sourceName": "contracts/AgeVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": true,
+            "mode": "3"
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "detectMissingLibraries": false,
+          "forceEVMLA": false,
+          "enableEraVMExtensions": false,
+          "libraries": {}
+        },
+        "eraVersion": "1.0.1",
+        "zksolc": {
+          "version": "1.5.7",
+          "compilerSource": "binary",
+          "settings": {
+            "optimizer": {
+              "enabled": true,
+              "mode": "3"
+            },
+            "compilerPath": "/Users/apple/Library/Caches/hardhat-nodejs/compilers-v2/zksolc/zksolc-v1.5.7",
+            "missingLibrariesPath": "./.zksolc-libraries-cache/missingLibraryDependencies.json",
+            "areLibrariesMissing": false,
+            "experimental": {},
+            "libraries": {},
+            "enableEraVMExtensions": false,
+            "forceEVMLA": false
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AgeVerifier",
+        "Pairing"
+      ]
+    },
+    "/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/contracts/ZkSyncDidRegistry.sol": {
+      "lastModificationDate": 1755780516553,
+      "contentHash": "ca87017ca4fa639b4245de6c3c0439ab",
+      "sourceName": "contracts/ZkSyncDidRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": true,
+            "mode": "3"
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "detectMissingLibraries": false,
+          "forceEVMLA": false,
+          "enableEraVMExtensions": false,
+          "libraries": {}
+        },
+        "eraVersion": "1.0.1",
+        "zksolc": {
+          "version": "1.5.7",
+          "compilerSource": "binary",
+          "settings": {
+            "optimizer": {
+              "enabled": true,
+              "mode": "3"
+            },
+            "compilerPath": "/Users/apple/Library/Caches/hardhat-nodejs/compilers-v2/zksolc/zksolc-v1.5.7",
+            "missingLibrariesPath": "./.zksolc-libraries-cache/missingLibraryDependencies.json",
+            "areLibrariesMissing": false,
+            "experimental": {},
+            "libraries": {},
+            "enableEraVMExtensions": false,
+            "forceEVMLA": false
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ZkSyncDidRegistry"
+      ]
+    },
+    "/Users/apple/Documents/SELF/lfdt-2025/credo-ts/packages/zksync/contracts/AgeVerifierGenerated.sol": {
+      "lastModificationDate": 1762710100340,
+      "contentHash": "945dec4c6a63fdb1bb56cfa475be3065",
+      "sourceName": "contracts/AgeVerifierGenerated.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": true,
+            "mode": "3"
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "detectMissingLibraries": false,
+          "forceEVMLA": false,
+          "enableEraVMExtensions": false,
+          "libraries": {}
+        },
+        "eraVersion": "1.0.1",
+        "zksolc": {
+          "version": "1.5.7",
+          "compilerSource": "binary",
+          "settings": {
+            "optimizer": {
+              "enabled": true,
+              "mode": "3"
+            },
+            "compilerPath": "/Users/apple/Library/Caches/hardhat-nodejs/compilers-v2/zksolc/zksolc-v1.5.7",
+            "missingLibrariesPath": "./.zksolc-libraries-cache/missingLibraryDependencies.json",
+            "areLibrariesMissing": false,
+            "experimental": {},
+            "libraries": {},
+            "enableEraVMExtensions": false,
+            "forceEVMLA": false
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "Groth16Verifier"
+      ]
+    }
+  }
+}

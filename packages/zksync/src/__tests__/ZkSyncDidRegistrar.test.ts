@@ -12,7 +12,17 @@ describe('ZkSyncDidRegistrar', () => {
       },
     }
 
-    const result = await registrar.create(agentContext, { method: 'zksync' })
+    // Create a test private key for the wallet
+    const testPrivateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+
+    const result = await registrar.create(agentContext, { 
+      method: 'zksync',
+      secret: {
+        privateKey: testPrivateKey
+      }
+    })
+    
+    console.log('Test result:', JSON.stringify(result, null, 2))
 
     expect(result.didState.state).toBe('finished')
     expect(result.didState.did).toMatch(/^did:zksync:0x[0-9a-fA-F]{40}$/)

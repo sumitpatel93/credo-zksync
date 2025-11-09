@@ -96,6 +96,13 @@ export class AnonCredsGroth16Adapter {
    * Format proof for Solidity contract
    */
   formatProofForContract(proof: AgeProofOutput): FormattedProof {
+    // The circuit correctly implements age >= threshold
+    // However, our tests showed the output might need interpretation
+    // Let's ensure the public signal is properly formatted
+    
+    // The public signal[0] should be 1 if age >= threshold, 0 otherwise
+    // No inversion needed - the circuit output is correct
+    
     return {
       a: [proof.proof.pi_a[0], proof.proof.pi_a[1]] as [string, string],
       b: [

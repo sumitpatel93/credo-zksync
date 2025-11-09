@@ -19,7 +19,9 @@ export class ZkSyncDidRegistrar implements DidRegistrar {
   private contractAddress: string;
 
   constructor(contractAddress: string) {
-    this.contractAddress = contractAddress;
+    // Test credentials provided: 0x3712B46d02d0943aF5282BE56A2Bc21Ade7d1613
+    // PrivateKey: 292047fb31c143df111aaffffbcd2b4be45e3d1c25c06b5949d479475f282a4d
+    this.contractAddress = contractAddress || '0x3712B46d02d0943aF5282BE56A2Bc21Ade7d1613'
   }
   public readonly supportedMethods = ['zksync']
 
