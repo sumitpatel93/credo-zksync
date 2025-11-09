@@ -14,7 +14,7 @@ import type {
   RegisterSchemaOptions,
   RegisterSchemaReturn,
 } from '@credo-ts/anoncreds'
-import { Contract, ethers } from 'ethers'
+import { BaseContract, Contract, ethers } from 'ethers'
 import { InjectionSymbols } from '@credo-ts/core'
 
 import * as ZkSyncDidRegistryAbi from '../contracts/ZkSyncDidRegistry.abi.json'
@@ -40,10 +40,10 @@ export class ZkSyncAnonCredsRegistry implements AnonCredsRegistry {
     this.contract = new ethers.Contract(ZkSyncDidRegistryContractAddress, ZkSyncDidRegistryAbi, this.provider)
   }
 
-  private async getContractWithSigner(agentContext: AgentContext): Promise<Contract> {
+  private async getContractWithSigner(agentContext: AgentContext): Promise<BaseContract> {
     try {
       // Try to get wallet from dependency manager
-      const wallet = agentContext.dependencyManager.tryResolve<any>('Wallet')
+      const wallet = agentContext.dependencyManager.resolve<any>('Wallet')
       if (!wallet?.signer) {
         throw new Error('Wallet with signer not found in dependency manager')
       }
