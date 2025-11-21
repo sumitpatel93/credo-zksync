@@ -75,6 +75,12 @@ We welcome you to join our mailing list and Discord channel. See the [Wiki](http
 
 OpenWallet Foundation Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
 
+**LFDT - Scalable and Privacy-Preserving Decentralized Identity on Layer 2 Rollups**
+
+**Active Terms:** 2025 June-Nov Part Time
+
+This project aims to integrate Hyperledger Aries, Indy, and AnonCreds with Layer 2 (L2) rollups (e.g., zkSync) to create a scalable, cost-efficient, and privacy-preserving decentralized identity (DID) system. This project will offload the most expensive part of identity verification—zero-knowledge proof (ZKP) generation and verification in AnonCreds— to L2, reducing the computational and gas costs of verifiable credential (VC) issuance and authentication. By using L2 rollups for...
+
 ## Project Timeline
 
 | Week | Achievements |
