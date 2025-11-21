@@ -77,26 +77,13 @@ OpenWallet Foundation Credo is licensed under the [Apache License Version 2.0 (A
 
 ## Project Timeline
 
-### Week of 2025-11-03 to 2025-11-09
-- **zkSync:** Updated circuit logic, fixed TypeScript errors for on-chain verification, and resolved compilation issues in `AnonCredsRegistry` and `DidRegistrar`.
-
-### Week of 2025-10-27 to 2025-11-02
-- **zkSync:** Added a complete credential flow example for AnonCreds age verification and improved documentation.
-
-### Week of 2025-10-20 to 2025-10-26
-- **zkSync:** Completed the implementation of AnonCreds to on-chain age verification.
-
-### Week of 2025-10-13 to 2025-10-19
-- **zkSync:** Fixed `AnonCredsGroth16Adapter` tests and documented testing progress.
-
-### Week of 2025-09-01 to 2025-09-07
-- **zkSync:** Updated `AgeVerifier` input size, added on-chain verification tests for zkSync Sepolia, and added mock circuit tests.
-
-### Week of 2025-08-18 to 2025-08-24
-- **zkSync:** Enhanced `README` with details on DID management, AnonCreds registry, and real zkSync Layer2 integration. Refactored `DidsModuleConfig` and updated `ZkSyncAnonCredsRegistry` to use ABI from a JSON file. Implemented `ZkSyncAnonCredsRegistry` with schema and credential management functions.
-
-### Week of 2025-07-28 to 2025-08-03
-- **zkSync:** Added detailed explanation of DID format, testing instructions, and sample output to `README`. Updated delegate management methods and refactored code structure.
-
-### Week of 2025-07-21 to 2025-07-27
-- **zkSync:** Implemented delegate management in `ZkSyncDidRegistrar` and `ZkSyncDidResolver`, enhanced them with contract integration, and added `ZkSyncDidRegistry` contract. Implemented `ZkSyncDidRegistrar` with create, update, and deactivate methods.
+| Week | Achievements |
+| :--- | :--- |
+| 2025-11-03 to 2025-11-09 | **zkSync:** Updated circuit logic, fixed TypeScript errors for on-chain verification, and resolved compilation issues in `AnonCredsRegistry` and `DidRegistrar`. |
+| 2025-10-27 to 2025-11-02 | **zkSync:** Added a complete credential flow example for AnonCreds age verification and improved documentation. |
+| 2025-10-20 to 2025-10-26 | **zkSync:** Completed the implementation of AnonCreds to on-chain age verification. |
+| 2025-10-13 to 2025-10-19 | **zkSync:** Fixed `AnonCredsGroth16Adapter` tests and documented testing progress. |
+| 2025-09-01 to 2025-09-07 | **zkSync:** Updated `AgeVerifier` input size, added on-chain verification tests for zkSync Sepolia, and added mock circuit tests. |
+| 2025-08-18 to 2025-08-24 | **zkSync:** Enhanced `README` with details on DID management, AnonCreds registry, and real zkSync Layer2 integration. Refactored `DidsModuleConfig` and updated `ZkSyncAnonCredsRegistry` to use ABI from a JSON file. Implemented `ZkSyncAnonCredsRegistry` with schema and credential management functions. |
+| 2025-07-28 to 2025-08-03 | **zkSync:** Added detailed explanation of DID format, testing instructions, and sample output to `README`. Updated delegate management methods and refactored code structure. |
+| 2025-07-21 to 2025-07-27 | **zkSync:** Implemented delegate management in `ZkSyncDidRegistrar` and `ZkSyncDidResolver`, enhanced them with contract integration, and added `ZkSyncDidRegistry` contract. Implemented `ZkSyncDidRegistrar` with create, update, and deactivate methods. |
