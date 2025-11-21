@@ -37,3 +37,16 @@ This project aims to integrate Hyperledger Aries, Indy, and AnonCreds with Layer
 | 2025-08-18 to 2025-08-24 | **zkSync:** Enhanced `README` with details on DID management, AnonCreds registry, and real zkSync Layer2 integration. Refactored `DidsModuleConfig` and updated `ZkSyncAnonCredsRegistry` to use ABI from a JSON file. Implemented `ZkSyncAnonCredsRegistry` with schema and credential management functions. |
 | 2025-07-28 to 2025-08-03 | **zkSync:** Added detailed explanation of DID format, testing instructions, and sample output to `README`. Updated delegate management methods and refactored code structure. |
 | 2025-07-21 to 2025-07-27 | **zkSync:** Implemented delegate management in `ZkSyncDidRegistrar` and `ZkSyncDidResolver`, enhanced them with contract integration, and added `ZkSyncDidRegistry` contract. Implemented `ZkSyncDidRegistrar` with create, update, and deactivate methods. |
+
+## ZK Proof Generation Status
+
+### Proving Key Generation Progress
+- **[Proving Key Status](PROVING_KEY_STATUS.md)** - Details the initial status and challenges in proving key generation
+- **[Proving Keys Complete](PROVING_KEYS_COMPLETE.md)** - Documents the successful completion of proving key generation
+
+Both documents track the journey from circuit compilation issues to successful zero-knowledge proof generation, including:
+- Circuit compilation to WASM and R1CS formats
+- Witness calculation and circuit logic verification
+- Powers of Tau ceremony setup
+- Valid zkey binary format generation
+- Proof generation with snarkjs
