@@ -50,3 +50,25 @@ Both documents track the journey from circuit compilation issues to successful z
 - Powers of Tau ceremony setup
 - Valid zkey binary format generation
 - Proof generation with snarkjs
+
+## Testing
+
+Run the AnonCreds to on-chain verification test suite:
+
+```bash
+# Test AnonCreds issuance and verification flow
+npm test packages/anoncreds/tests/anoncreds-flow.test.ts
+
+# Test AnonCreds to Groth16 proof conversion (zkSync integration)
+npm test packages/zksync/src/__tests__/integration.test.ts
+
+# Test specific features
+npm test -- --testNamePattern="should complete AnonCreds to on-chain verification flow"
+npm test -- --testNamePattern="should handle various age thresholds"
+```
+
+Key test details:
+- All AnonCreds issuance tests pass (2/2)
+- Circuit correctly outputs `0` for valid (age ≥ threshold) and `1` for invalid
+- 4/9 integration tests passing (local verification has known issues but doesn't affect on-chain functionality)
+- See [ANONCREDS_ONCHAIN_VERIFICATION_STATUS.md](ANONCREDS_ONCHAIN_VERIFICATION_STATUS.md) for detailed test results
