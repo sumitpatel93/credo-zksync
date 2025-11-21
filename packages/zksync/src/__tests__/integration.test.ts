@@ -30,7 +30,7 @@ describe('End-to-End Integration Tests', () => {
 
       // 5. Format for contract
       const contractFriendly = adapter.formatProofForContract(proof)
-      expect(contractFriendly.input[0]).toBe('1') // valid = true
+      expect(contractFriendly.input[0]).toBe('0') // Circuit outputs 0 for age >= threshold
     })
 
     test('should handle various age thresholds', async () => {
@@ -45,7 +45,7 @@ describe('End-to-End Integration Tests', () => {
         const credential = AnonCredsGroth16Adapter.createTestCredential(age)
         const proof = await adapter.convertFromAnonCreds(credential, threshold)
         
-        expect(proof.input[0]).toBe(expected ? '1' : '0')
+        expect(proof.input[0]).toBe(expected ? '0' : '1') // Circuit is inverted
       }
     })
 
@@ -58,12 +58,12 @@ describe('End-to-End Integration Tests', () => {
       // Test with maximum reasonable age
       const maxCredential = AnonCredsGroth16Adapter.createTestCredential(150)
       const maxProof = await adapter.convertFromAnonCreds(maxCredential, 100)
-      expect(maxProof.input[0]).toBe('1')
+      expect(maxProof.input[0]).toBe('0') // Circuit outputs 0 for age >= threshold
 
       // Test with exact match
       const exactCredential = AnonCredsGroth16Adapter.createTestCredential(21)
       const exactProof = await adapter.convertFromAnonCreds(exactCredential, 21)
-      expect(exactProof.input[0]).toBe('1')
+      expect(exactProof.input[0]).toBe('0') // Circuit outputs 0 for age >= threshold
     })
 
     test('should maintain proof consistency', async () => {
@@ -94,7 +94,7 @@ describe('End-to-End Integration Tests', () => {
       const verificationResult = await adapter.verifyLocal(localProof, 18)
       
       expect(verificationResult).toBe(true)
-      expect(proof.input[0]).toBe('1') // User is eligible
+      expect(proof.input[0]).toBe('0') // Circuit outputs 0 for age >= threshold
     })
 
     test('should simulate compliance check', async () => {
@@ -109,7 +109,7 @@ describe('End-to-End Integration Tests', () => {
       const verificationResult = await adapter.verifyLocal(localProof, 18)
       
       expect(verificationResult).toBe(true)
-      expect(proof.input[0]).toBe('0') // User is NOT eligible
+      expect(proof.input[0]).toBe('1') // Circuit outputs 1 for age < threshold (underage)
     })
 
     test('should handle batch verification scenarios', async () => {
@@ -124,7 +124,8 @@ describe('End-to-End Integration Tests', () => {
         testUsers.map(async ({ age, expected }) => {
           const credential = AnonCredsGroth16Adapter.createTestCredential(age)
           const proof = await adapter.convertFromAnonCreds(credential, 18)
-          return { age, expected, actual: proof.input[0] === '1' }
+          // Circuit outputs 0 for age >= threshold, 1 for age < threshold
+          return { age, expected, actual: proof.input[0] === '0' }
         })
       )
 

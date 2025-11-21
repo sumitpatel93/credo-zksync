@@ -119,15 +119,28 @@ export class AnonCredsGroth16Adapter {
    */
   async verifyLocal(proof: AgeProofOutput, ageThreshold: number): Promise<boolean> {
     try {
-      const verificationKeyPath = path.join(__dirname, '../../build/verification_key.json')
+      const basePath = process.cwd().endsWith('zksync') ? './build/verification_key.json' : './packages/zksync/build/verification_key.json'
+      const verificationKeyPath = path.resolve(process.cwd(), basePath)
+      
+      // Debug logging
+      console.log('Verification key path:', verificationKeyPath)
+      
       const verificationKey = JSON.parse(await fs.readFile(verificationKeyPath, 'utf-8'))
       
-      return await snarkjs.groth16.verify(
+      // Debug logging
+      console.log('Verification key loaded, protocol:', verificationKey.protocol)
+      console.log('Public signals:', proof.publicSignals)
+      
+      const result = await snarkjs.groth16.verify(
         verificationKey,
         proof.publicSignals,
         proof.proof
       )
+      
+      console.log('Verification result:', result)
+      return result
     } catch (error) {
+      console.error('Verification error:', error)
       throw new Error(`Failed to verify proof locally: ${error.message}`)
     }
   }
